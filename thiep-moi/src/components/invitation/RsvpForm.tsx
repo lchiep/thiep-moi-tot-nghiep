@@ -1,6 +1,14 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { PartyPopper, Frown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const STORAGE_KEY = "graduationRsvp";
 
@@ -25,6 +33,11 @@ export default function RsvpForm({ defaultName }: { defaultName: string }) {
   if (confirmed) {
     return (
       <div className="rsvp-confirmed">
+        {attendance === "yes" ? (
+          <PartyPopper className="rsvp-result-icon yes" size={36} />
+        ) : (
+          <Frown className="rsvp-result-icon no" size={36} />
+        )}
         <p>
           {attendance === "yes"
             ? "Cảm ơn bạn đã xác nhận tham dự! Hẹn gặp bạn tại buổi lễ."
@@ -45,6 +58,7 @@ export default function RsvpForm({ defaultName }: { defaultName: string }) {
           className={attendance === "yes" ? "rsvp-option active yes" : "rsvp-option yes"}
           onClick={() => setAttendance("yes")}
         >
+          <PartyPopper size={16} />
           Có, tôi sẽ tham dự
         </button>
         <button
@@ -52,6 +66,7 @@ export default function RsvpForm({ defaultName }: { defaultName: string }) {
           className={attendance === "no" ? "rsvp-option active no" : "rsvp-option no"}
           onClick={() => setAttendance("no")}
         >
+          <Frown size={16} />
           Rất tiếc, không thể tham dự
         </button>
       </div>
@@ -59,13 +74,18 @@ export default function RsvpForm({ defaultName }: { defaultName: string }) {
       {attendance === "yes" && (
         <label className="rsvp-guests">
           Số người đi cùng
-          <select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
-            {[1, 2, 3, 4].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
+          <Select value={String(guests)} onValueChange={(v) => setGuests(Number(v))}>
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[1, 2, 3, 4].map((n) => (
+                <SelectItem key={n} value={String(n)}>
+                  {n}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </label>
       )}
 

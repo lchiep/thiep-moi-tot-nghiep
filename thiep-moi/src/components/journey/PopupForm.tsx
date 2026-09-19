@@ -7,13 +7,13 @@ import {
   Phone,
   CreditCard,
   Mail,
-  CalendarDays,
   Star,
   Pencil,
   X,
   Send,
 } from "lucide-react";
 import type { Gender } from "@/lib/guestStorage";
+import { DatePickerField } from "@/components/ui/date-picker";
 
 export type GuestFormData = {
   fullName: string;
@@ -180,13 +180,10 @@ export default function PopupForm({
         <div className="field">
           <label>Ngày sinh</label>
           <div className="input-glass">
-            <span className="field-icon">
-              <CalendarDays size={19} />
-            </span>
-            <input
-              type="date"
+            <DatePickerField
               value={form.dob}
-              onChange={(e) => updateField("dob", e.target.value)}
+              onChange={(value) => updateField("dob", value)}
+              placeholder="Chọn ngày sinh"
             />
           </div>
         </div>
