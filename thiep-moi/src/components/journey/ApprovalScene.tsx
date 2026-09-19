@@ -89,20 +89,23 @@ export default function ApprovalScene({
       )}
 
       {gender === "Nữ" && (stage === "female-letter" || stage === "female-flight") && (
-        <div
-          className={`female-envelope ${
-            stage === "female-letter" ? "female-letter-stamped" : ""
-          } ${stage === "female-flight" ? "female-letter-flying" : ""}`}
-        >
-          <div className="envelope-back" />
-          <div className="envelope-paper">
-            <div className="envelope-paper-content">
-              <span>BẠN ĐƯỢC DUYỆT</span>
+        <>
+          <div className="female-scene-reveal" />
+          <div
+            className={`female-envelope ${
+              stage === "female-letter" ? "female-letter-stamped" : ""
+            } ${stage === "female-flight" ? "female-letter-flying" : ""}`}
+          >
+            <div className="envelope-back" />
+            <div className="envelope-paper">
+              <div className="envelope-paper-content">
+                <span>BẠN ĐƯỢC DUYỆT</span>
+              </div>
             </div>
+            <div className="envelope-flap" />
+            <div className="female-wax-seal">B</div>
           </div>
-          <div className="envelope-flap" />
-          <div className="female-wax-seal">B</div>
-        </div>
+        </>
       )}
     </section>
   );
