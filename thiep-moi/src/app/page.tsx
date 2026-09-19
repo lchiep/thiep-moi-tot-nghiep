@@ -1,17 +1,55 @@
-import AppJourney from "@/components/AppJourney";
+"use client";
 
-// Toàn bộ trải nghiệm được thiết kế cho khung dọc kiểu điện thoại
-// (~390-430px). Trên màn hình rộng (desktop), khung 3D vẫn giữ đúng tỉ lệ
-// đó — bọc trong một "thẻ" rộng tối đa 480px, canh giữa — thay vì kéo giãn
-// full màn hình ngang, vì camera/vị trí 3D được tính theo chiều dọc: kéo
-// ngang quá rộng làm lộ cạnh phẳng của mặt sàn đổ bóng (nhìn như một khối
-// xám khổng lồ).
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import CallScreen from "@/components/journey/CallScreen";
+import PopupForm, { type GuestFormData } from "@/components/journey/PopupForm";
+import ApprovalScene, { type ApprovalStage } from "@/components/journey/ApprovalScene";
+import { saveGuest, type Gender } from "@/lib/guestStorage";
+import "./journey.css";
+
+type Stage = "call" | "form" | ApprovalStage;
+
 export default function Home() {
+  const router = useRouter();
+  const [stage, setStage] = useState<Stage>("call");
+  const [gender, setGender] = useState<Gender>("Nam");
+
+  const handleSubmit = (data: GuestFormData & { gender: Gender }) => {
+    saveGuest(data.fullName, data.nickname, data.gender);
+    setGender(data.gender);
+    setStage("stamp");
+
+    if (data.gender === "Nữ") {
+      window.setTimeout(() => setStage("female-letter"), 1800);
+      window.setTimeout(() => setStage("female-flight"), 3000);
+      window.setTimeout(() => router.push("/invitation"), 5200);
+      return;
+    }
+
+    window.setTimeout(() => setStage("transform"), 1800);
+    window.setTimeout(() => setStage("flight"), 3300);
+    window.setTimeout(() => setStage("landed"), 5900);
+  };
+
   return (
-    <div className="relative flex h-dvh w-full items-center justify-center overflow-hidden bg-[var(--bg-deep)]">
-      <div className="relative h-full w-full max-w-[480px] overflow-hidden sm:h-[92dvh] sm:max-h-[900px] sm:rounded-[28px] sm:shadow-[0_30px_80px_rgba(0,0,0,0.55)]">
-        <AppJourney />
-      </div>
-    </div>
+    <main className="graduation-page">
+      <div className="scene-background" />
+      <div className="scene-vignette" />
+      <div className="moving-light light-a" />
+      <div className="moving-light light-b" />
+
+      {stage === "call" && <CallScreen onAnswered={() => setStage("form")} />}
+
+      {stage === "form" && <PopupForm onSubmit={handleSubmit} />}
+
+      {stage !== "call" && stage !== "form" && (
+        <ApprovalScene
+          stage={stage}
+          gender={gender}
+          onPlaneTap={() => router.push("/invitation")}
+        />
+      )}
+    </main>
   );
 }
