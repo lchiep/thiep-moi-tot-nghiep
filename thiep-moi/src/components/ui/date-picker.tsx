@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { CalendarDays } from "lucide-react";
 
@@ -19,10 +20,11 @@ export function DatePickerField({
   placeholder?: string;
   className?: string;
 }) {
+  const [open, setOpen] = useState(false);
   const selected = value ? parseISO(value) : undefined;
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           type="button"
@@ -44,7 +46,10 @@ export function DatePickerField({
           defaultMonth={selected ?? new Date(2005, 0)}
           startMonth={new Date(1970, 0)}
           endMonth={new Date()}
-          onSelect={(date) => onChange(date ? format(date, "yyyy-MM-dd") : "")}
+          onSelect={(date) => {
+            onChange(date ? format(date, "yyyy-MM-dd") : "");
+            setOpen(false);
+          }}
         />
       </PopoverContent>
     </Popover>

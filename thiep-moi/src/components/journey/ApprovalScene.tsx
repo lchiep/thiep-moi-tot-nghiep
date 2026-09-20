@@ -57,7 +57,11 @@ export default function ApprovalScene({
         </div>
       )}
 
-      {gender === "Nam" && showPaperEnvelope && (
+      {/* Both genders see the same paper get stamped -- only Nam keeps
+          this element around afterward (folding it into the plane); Nữ's
+          "stamp" stage was rendering the stamp tool over empty
+          background with nothing to stamp onto. */}
+      {(gender === "Nam" ? showPaperEnvelope : stage === "stamp") && (
         <div
           className={`approved-paper ${
             stage === "transform" ? "paper-transforming" : ""
