@@ -41,7 +41,9 @@ export default function Home() {
 
       {stage === "call" && <CallScreen onAnswered={() => setStage("form")} />}
 
-      {stage === "form" && <PopupForm onSubmit={handleSubmit} />}
+      {stage === "form" && (
+        <PopupForm onSubmit={handleSubmit} onBack={() => setStage("call")} />
+      )}
 
       {stage !== "call" && stage !== "form" && (
         <ApprovalScene

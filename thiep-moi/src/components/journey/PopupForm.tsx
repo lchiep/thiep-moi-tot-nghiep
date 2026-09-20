@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import {
+  ArrowLeft,
   User,
   Home as HomeIcon,
   Phone,
@@ -41,8 +42,10 @@ const initialForm: GuestFormData = {
 
 export default function PopupForm({
   onSubmit,
+  onBack,
 }: {
   onSubmit: (data: GuestFormData & { gender: Gender }) => void;
+  onBack: () => void;
 }) {
   const [form, setForm] = useState<GuestFormData>(initialForm);
 
@@ -85,6 +88,9 @@ export default function PopupForm({
       <section className="form-popup">
         <div className="popup-header">
           <div className="header-shine" />
+          <button type="button" className="popup-back-button" onClick={onBack} aria-label="Quay lại">
+            <ArrowLeft size={19} />
+          </button>
           NHẬP THÔNG TIN CỦA BẠN
         </div>
 
