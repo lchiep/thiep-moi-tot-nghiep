@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { Gender } from "@/lib/guestStorage";
+
+// Three.js touches the canvas/WebGL context, which doesn't exist during
+// SSR -- load it only in the browser.
+const PaperPlane3D = dynamic(() => import("./PaperPlane3D"), { ssr: false });
 
 export type ApprovalStage =
   | "stamp"
@@ -11,6 +16,19 @@ export type ApprovalStage =
   | "female-letter"
   | "female-flight"
   | "female-landed";
+
+// A real paper-dart silhouette (single SVG, not four CSS border-triangles
+// glued together) -- a pointed nose, a notched tail, and a center crease
+// with the two wings shaded slightly differently to read as folded paper.
+function PaperPlaneIcon() {
+  return (
+    <svg className="plane-icon" viewBox="0 0 220 145" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M218 72 L0 20 L132 72 Z" fill="#faf6ec" />
+      <path d="M218 72 L132 72 L0 124 Z" fill="#ddd2b8" />
+      <path d="M218 72 L132 72" stroke="rgba(85, 72, 58, 0.35)" strokeWidth="2" />
+    </svg>
+  );
+}
 
 export default function ApprovalScene({
   stage,
@@ -77,24 +95,42 @@ export default function ApprovalScene({
         </div>
       )}
 
-      {gender === "Nam" &&
-        (stage === "transform" || stage === "flight" || stage === "landed") && (
-          <button
-            className={`paper-plane ${
-              stage === "transform" ? "plane-folding" : ""
-            } ${stage === "flight" ? "plane-flight" : ""} ${
-              stage === "landed" ? "plane-landed" : ""
-            } ${planeClicked ? "plane-clicked" : ""}`}
-            onClick={handlePlaneClick}
-            type="button"
-            aria-label="Mở thiệp"
-          >
-            <span className="plane-top" />
-            <span className="plane-left" />
-            <span className="plane-right" />
-            <span className="plane-center" />
-          </button>
-        )}
+      {/* The flat 2D paper folds into a flat plane silhouette here, then
+          hands off to a real 3D plane (Three.js) for "flight" and
+          "landed" -- genuine banking/depth instead of a flat cutout
+          sliding around. The 2D fold fades out just as the 3D canvas
+          fades in so the handoff reads as one continuous motion. */}
+      {gender === "Nam" && stage === "transform" && (
+        <button
+          className="paper-plane plane-folding"
+          type="button"
+          aria-label="Mở thiệp"
+          disabled
+        >
+          <PaperPlaneIcon />
+        </button>
+      )}
+
+      {gender === "Nam" && (stage === "flight" || stage === "landed") && (
+        <PaperPlane3D
+          phase={stage === "flight" ? "flight" : "landed"}
+          clicked={planeClicked}
+          onLandedClick={handlePlaneClick}
+        />
+      )}
+
+      {/* A real DOM button for the tap target instead of relying on R3F's
+          raycasting hit-testing on a thin mesh -- more reliable, and a
+          much friendlier touch target on an actual phone besides. It
+          sits invisibly over the 3D plane's landing spot. */}
+      {gender === "Nam" && stage === "landed" && (
+        <button
+          type="button"
+          className="plane-3d-tap-target"
+          aria-label="Mở thiệp"
+          onClick={handlePlaneClick}
+        />
+      )}
 
       {gender === "Nam" && stage === "landed" && (
         <>
