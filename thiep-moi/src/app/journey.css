@@ -126,6 +126,35 @@ button {
   background-position: center;
 }
 
+/* A second copy of the exact same photo, same cover-fit, so it lines up
+   pixel-for-pixel with .background-image at rest. A soft round mask
+   reveals only the small leaf in the top-left corner; rotating this
+   layer makes that one real, photographed leaf sway, instead of a drawn
+   shape trying to imitate it. */
+.background-image-leaf {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background-image: url("/images/graduation-bg.webp");
+  background-size: cover;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(circle 58px at 22px 88px, black 45%, transparent 100%);
+  mask-image: radial-gradient(circle 58px at 22px 88px, black 45%, transparent 100%);
+  transform-origin: 4px 82px;
+  animation: leaf-photo-sway 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes leaf-photo-sway {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
 .dark-overlay {
   position: absolute;
   inset: 0;
@@ -523,8 +552,7 @@ button {
   }
 }
 
-/* Ambient light + leaf-shadow behind the popup, visible through its glass
-   blur — matches the "liquid glass" reference (sunlight + branch shadow). */
+/* Ambient light glow behind the popup, visible through its glass blur. */
 .background-light {
   position: absolute;
   border-radius: 50%;
@@ -570,73 +598,6 @@ button {
   }
   100% {
     transform: translate(-80px, -100px);
-  }
-}
-
-/* Sits directly on the glass card's surface, like sunlight casting a
-   crisp window-frame shadow onto glass -- not hidden behind the card's
-   own backdrop blur, which would turn it into a shapeless soft blob.
-   Positions are kept flush inside the card's own box (no negative
-   offsets) on purpose: an ancestor with any actual layout overflow --
-   even one that's overflow: hidden -- is still a "scroll container" that
-   Chromium will auto-scroll to reveal a focused descendant (a field
-   gaining focus). Bleeding past the edge here silently reintroduced the
-   "popup can scroll" bug even though no scrollbar was ever visible. */
-.window-shadow-svg {
-  position: absolute;
-  width: 280px;
-  height: 420px;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(0.5px);
-  opacity: 0.55;
-  mix-blend-mode: multiply;
-}
-
-.window-shadow-svg g {
-  fill: rgba(20, 16, 12, 0.62);
-}
-
-/* A window frame doesn't sway -- only the light through it drifts very
-   slowly, like the sun moving or a thin curtain shifting. */
-.window-shadow-drift {
-  transform-origin: 50% 50%;
-  animation: window-light-drift 9s ease-in-out infinite;
-}
-
-.window-shadow-one {
-  right: 0;
-  top: 0;
-  transform: rotate(13deg);
-}
-
-/* A second, fainter pane shadow low on the other side for depth. Inset
-   by a little more than 0 -- its rotate/scaleX transform shifts the
-   rendered bounding box enough that Chromium counts it toward
-   scrollHeight even though the transform itself is purely visual. */
-.window-shadow-two {
-  left: 6px;
-  bottom: 24px;
-  width: 200px;
-  height: 300px;
-  transform: scaleX(-1) rotate(13deg);
-  opacity: 0.32;
-}
-
-.window-shadow-two .window-shadow-drift {
-  animation-delay: 2s;
-  animation-duration: 11s;
-}
-
-@keyframes window-light-drift {
-  0%,
-  100% {
-    transform: translate(0, 0);
-    opacity: 1;
-  }
-  50% {
-    transform: translate(3px, -4px);
-    opacity: 0.85;
   }
 }
 

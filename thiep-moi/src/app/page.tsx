@@ -45,6 +45,10 @@ export default function Home() {
       {(stage === "call" || stage === "form") && (
         <>
           <div className="background-image" />
+          {/* Same photo, same cover-fit, masked down to just the leaf in
+              the top-left corner and given its own rotation -- so the
+              real photographed leaf sways instead of a drawn-on one. */}
+          <div className="background-image-leaf" />
           <div className="dark-overlay" />
         </>
       )}

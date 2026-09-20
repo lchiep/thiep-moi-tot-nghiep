@@ -40,58 +40,6 @@ const initialForm: GuestFormData = {
   description: "",
 };
 
-// Cast shadow of a window frame (straight mullions) WITH a tree branch and
-// leaves visible just outside it, combined into one shadow shape -- like
-// sunlight streaming through a window with a plant right outside. Not a
-// photo, pure SVG so it works without an asset. The light drifts very
-// slowly; the frame and branch themselves don't move.
-function WindowShadow({ className }: { className: string }) {
-  return (
-    <svg
-      className={`window-shadow-svg ${className}`}
-      viewBox="0 0 220 340"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <g className="window-shadow-drift">
-        {/* window mullions */}
-        <rect x="70" y="-30" width="11" height="400" transform="rotate(13 76 170)" />
-        <rect x="150" y="-30" width="9" height="400" transform="rotate(13 155 170)" />
-        <rect x="-30" y="150" width="280" height="10" transform="rotate(13 110 155)" />
-        <rect x="205" y="-30" width="8" height="400" transform="rotate(13 209 170)" opacity="0.7" />
-
-        {/* a branch with leaves reaching across the frame, as if a tree is
-            just outside the glass */}
-        <path
-          d="M188 4 C 150 50, 165 110, 120 160 S 90 250, 100 300"
-          stroke="black"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.85"
-        />
-        <path
-          d="M150 90 C 135 82, 118 80, 104 88"
-          stroke="black"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.85"
-        />
-        <ellipse cx="175" cy="30" rx="17" ry="7.5" transform="rotate(-30 175 30)" />
-        <ellipse cx="160" cy="60" rx="15" ry="7" transform="rotate(15 160 60)" />
-        <ellipse cx="130" cy="85" rx="16" ry="7" transform="rotate(-45 130 85)" />
-        <ellipse cx="108" cy="90" rx="14" ry="6.5" transform="rotate(20 108 90)" />
-        <ellipse cx="128" cy="140" rx="17" ry="7.5" transform="rotate(-20 128 140)" />
-        <ellipse cx="95" cy="175" rx="15" ry="7" transform="rotate(35 95 175)" />
-        <ellipse cx="112" cy="230" rx="16" ry="7" transform="rotate(-30 112 230)" />
-        <ellipse cx="90" cy="270" rx="14" ry="6.5" transform="rotate(10 90 270)" />
-      </g>
-    </svg>
-  );
-}
-
 export default function PopupForm({
   onSubmit,
   onBack,
@@ -136,9 +84,6 @@ export default function PopupForm({
       <div className="background-light light-two" />
 
       <section className="form-popup">
-        <WindowShadow className="window-shadow-one" />
-        <WindowShadow className="window-shadow-two" />
-
         <div className="popup-header">
           <div className="header-shine" />
           <button type="button" className="popup-back-button" onClick={onBack} aria-label="Quay lại">
