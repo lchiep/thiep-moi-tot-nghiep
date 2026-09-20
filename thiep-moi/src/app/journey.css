@@ -436,11 +436,13 @@ button {
 }
 
 .popup-header {
+  position: relative;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 18px;
+  overflow: hidden;
   color: rgba(255, 255, 255, 0.96);
   font-size: 18px;
   font-weight: 700;
@@ -448,6 +450,304 @@ button {
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.header-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 45%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  animation: header-shine-sweep 5s ease-in-out infinite;
+}
+
+@keyframes header-shine-sweep {
+  0%,
+  65% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* Ambient light + leaf-shadow behind the popup, visible through its glass
+   blur — matches the "liquid glass" reference (sunlight + branch shadow). */
+.background-light {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(65px);
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+
+.light-one {
+  width: 320px;
+  height: 320px;
+  left: -100px;
+  top: -80px;
+  background: rgba(255, 207, 145, 0.34);
+  animation: light-move-one 12s ease-in-out infinite alternate;
+}
+
+.light-two {
+  width: 270px;
+  height: 270px;
+  right: -110px;
+  bottom: 10%;
+  background: rgba(255, 236, 198, 0.18);
+  animation: light-move-two 15s ease-in-out infinite alternate;
+}
+
+@keyframes light-move-one {
+  0% {
+    transform: translate(-20px, -10px);
+  }
+  50% {
+    transform: translate(100px, 70px);
+  }
+  100% {
+    transform: translate(25px, 130px);
+  }
+}
+
+@keyframes light-move-two {
+  0% {
+    transform: translate(20px, 20px);
+  }
+  100% {
+    transform: translate(-80px, -100px);
+  }
+}
+
+.leaf-shadow {
+  position: absolute;
+  width: 280px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.32), transparent 65%);
+  filter: blur(16px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.leaf-shadow-one {
+  left: 0;
+  top: -60px;
+  transform: rotate(-22deg);
+  animation: leaf-float-one 10s ease-in-out infinite alternate;
+}
+
+.leaf-shadow-two {
+  right: -100px;
+  top: 20%;
+  transform: rotate(25deg);
+  animation: leaf-float-two 13s ease-in-out infinite alternate;
+}
+
+@keyframes leaf-float-one {
+  0% {
+    transform: rotate(-22deg) translate(0, 0);
+  }
+  100% {
+    transform: rotate(-15deg) translate(65px, 30px);
+  }
+}
+
+@keyframes leaf-float-two {
+  0% {
+    transform: rotate(25deg) translate(0, 0);
+  }
+  100% {
+    transform: rotate(12deg) translate(-50px, -20px);
+  }
+}
+
+/* Water drops + sparkles sit on top of the glass card itself. */
+.water-drop {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 20;
+  background: radial-gradient(
+    circle at 27% 20%,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.45) 4%,
+    rgba(255, 255, 255, 0.14) 15%,
+    rgba(255, 255, 255, 0.04) 38%,
+    rgba(255, 255, 255, 0.01) 62%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow:
+    inset -8px -8px 13px rgba(0, 0, 0, 0.12),
+    inset 5px 6px 13px rgba(255, 255, 255, 0.23),
+    0 12px 24px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  overflow: hidden;
+}
+
+.water-drop::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  filter: blur(0.5px);
+}
+
+.drop-highlight {
+  position: absolute;
+  width: 25%;
+  height: 14%;
+  left: 20%;
+  top: 18%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.66);
+  filter: blur(1px);
+  transform: rotate(-25deg);
+}
+
+.drop-one {
+  width: 80px;
+  height: 80px;
+  right: 7%;
+  top: 42%;
+  animation: drop-float-one 7s ease-in-out infinite;
+}
+
+.drop-two {
+  width: 46px;
+  height: 46px;
+  left: 10%;
+  top: 23%;
+  animation: drop-float-two 8s ease-in-out infinite;
+}
+
+.drop-three {
+  width: 58px;
+  height: 58px;
+  right: 18%;
+  bottom: 18%;
+  animation: drop-float-three 9s ease-in-out infinite;
+}
+
+.drop-four {
+  width: 30px;
+  height: 30px;
+  left: 17%;
+  bottom: 30%;
+  animation: drop-float-four 6s ease-in-out infinite;
+}
+
+.drop-five {
+  width: 24px;
+  height: 24px;
+  right: 39%;
+  top: 12%;
+  opacity: 0.65;
+  animation: drop-float-five 5s ease-in-out infinite;
+}
+
+@keyframes drop-float-one {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  25% {
+    transform: translate3d(7px, -10px, 0) scale(1.03);
+  }
+  50% {
+    transform: translate3d(-5px, 8px, 0) scale(0.98);
+  }
+  75% {
+    transform: translate3d(10px, 13px, 0) scale(1.02);
+  }
+}
+
+@keyframes drop-float-two {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(18px, 13px) rotate(12deg);
+  }
+}
+
+@keyframes drop-float-three {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-14px, -20px) scale(1.06);
+  }
+}
+
+@keyframes drop-float-four {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(13px, -15px);
+  }
+}
+
+@keyframes drop-float-five {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-8px, 12px);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 22px;
+  pointer-events: none;
+  z-index: 21;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  animation: sparkle-twinkle 3s ease-in-out infinite;
+}
+
+.sparkle-one {
+  right: 9%;
+  top: 2%;
+}
+
+.sparkle-two {
+  left: 3%;
+  top: 8%;
+  animation-delay: 1s;
+}
+
+.sparkle-three {
+  right: 1%;
+  bottom: 4%;
+  font-size: 27px;
+  animation-delay: 1.7s;
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.7) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(15deg);
+  }
 }
 
 .profile-form {
