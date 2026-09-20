@@ -101,6 +101,11 @@ export default function ApprovalScene({
       {gender === "Nữ" && showFemaleEnvelope && (
         <>
           <div className="female-scene-reveal" />
+
+          {stage === "female-letter" && (
+            <div className="approval-banner">BẠN ĐƯỢC DUYỆT</div>
+          )}
+
           <button
             type="button"
             aria-label="Mở thiệp"
@@ -112,14 +117,7 @@ export default function ApprovalScene({
               stage === "female-landed" ? "female-letter-landed" : ""
             } ${envelopeClicked ? "envelope-clicked" : ""}`}
           >
-            <div className="envelope-back" />
-            <div className="envelope-paper">
-              <div className="envelope-paper-content">
-                <span>BẠN ĐƯỢC DUYỆT</span>
-              </div>
-            </div>
-            <div className="envelope-flap" />
-            <div className="female-wax-seal">B</div>
+            <img src="/images/envelope-card.png" alt="" className="envelope-photo-img" />
           </button>
         </>
       )}
