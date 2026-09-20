@@ -23,7 +23,7 @@ export default function Home() {
     if (data.gender === "Nữ") {
       window.setTimeout(() => setStage("female-letter"), 1800);
       window.setTimeout(() => setStage("female-flight"), 3000);
-      window.setTimeout(() => router.push("/invitation"), 5200);
+      window.setTimeout(() => setStage("female-landed"), 5200);
       return;
     }
 
@@ -47,7 +47,7 @@ export default function Home() {
         <ApprovalScene
           stage={stage}
           gender={gender}
-          onPlaneTap={() => router.push("/invitation")}
+          onOpen={() => router.push("/invitation")}
         />
       )}
     </main>

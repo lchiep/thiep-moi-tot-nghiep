@@ -9,26 +9,36 @@ export type ApprovalStage =
   | "flight"
   | "landed"
   | "female-letter"
-  | "female-flight";
+  | "female-flight"
+  | "female-landed";
 
 export default function ApprovalScene({
   stage,
   gender,
-  onPlaneTap,
+  onOpen,
 }: {
   stage: ApprovalStage;
   gender: Gender;
-  onPlaneTap: () => void;
+  onOpen: () => void;
 }) {
   const [planeClicked, setPlaneClicked] = useState(false);
+  const [envelopeClicked, setEnvelopeClicked] = useState(false);
 
   const handlePlaneClick = () => {
     if (stage !== "landed" || planeClicked) return;
     setPlaneClicked(true);
-    window.setTimeout(onPlaneTap, 480);
+    window.setTimeout(onOpen, 480);
+  };
+
+  const handleEnvelopeClick = () => {
+    if (stage !== "female-landed" || envelopeClicked) return;
+    setEnvelopeClicked(true);
+    window.setTimeout(onOpen, 480);
   };
 
   const showPaperEnvelope = stage === "stamp" || stage === "transform" || stage === "flight";
+  const showFemaleEnvelope =
+    stage === "female-letter" || stage === "female-flight" || stage === "female-landed";
 
   return (
     <section className={`approval-scene stage-${stage}`}>
@@ -88,13 +98,19 @@ export default function ApprovalScene({
         </>
       )}
 
-      {gender === "Nữ" && (stage === "female-letter" || stage === "female-flight") && (
+      {gender === "Nữ" && showFemaleEnvelope && (
         <>
           <div className="female-scene-reveal" />
-          <div
+          <button
+            type="button"
+            aria-label="Mở thiệp"
+            disabled={stage !== "female-landed"}
+            onClick={handleEnvelopeClick}
             className={`female-envelope ${
               stage === "female-letter" ? "female-letter-stamped" : ""
-            } ${stage === "female-flight" ? "female-letter-flying" : ""}`}
+            } ${stage === "female-flight" ? "female-letter-flying" : ""} ${
+              stage === "female-landed" ? "female-letter-landed" : ""
+            } ${envelopeClicked ? "envelope-clicked" : ""}`}
           >
             <div className="envelope-back" />
             <div className="envelope-paper">
@@ -104,8 +120,12 @@ export default function ApprovalScene({
             </div>
             <div className="envelope-flap" />
             <div className="female-wax-seal">B</div>
-          </div>
+          </button>
         </>
+      )}
+
+      {gender === "Nữ" && stage === "female-landed" && (
+        <div className="touch-hint female-touch-hint">CHẠM VÀO THƯ ĐỂ MỞ</div>
       )}
     </section>
   );

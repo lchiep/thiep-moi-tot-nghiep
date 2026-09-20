@@ -1172,6 +1172,10 @@ button {
   animation: reveal-bouquet-scene 2.2s ease forwards;
 }
 
+.stage-female-landed .female-scene-reveal {
+  opacity: 1;
+}
+
 @keyframes reveal-bouquet-scene {
   0%,
   45% {
@@ -1188,6 +1192,9 @@ button {
   top: 58%;
   width: 280px;
   height: 180px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   transform: translate(-50%, -50%) rotate(-4deg);
   z-index: 20;
   opacity: 0;
@@ -1320,18 +1327,57 @@ button {
     top: 55%;
     transform: translate(-50%, -50%) rotate(8deg) scale(0.92);
   }
-  92% {
-    left: 46%;
-    top: 63%;
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(-3deg) scale(0.72);
-  }
   100% {
     left: 44%;
     top: 66%;
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(-4deg) scale(0.64);
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
   }
+}
+
+.female-letter-landed {
+  opacity: 1;
+  left: 44%;
+  top: 66%;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: envelope-rest 3.6s ease-in-out infinite;
+}
+
+@keyframes envelope-rest {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-2deg) scale(0.82) translateY(-4px);
+  }
+}
+
+.envelope-clicked {
+  animation: envelope-click 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes envelope-click {
+  0% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
+  }
+  35% {
+    transform: translate(-50%, -50%) rotate(2deg) scale(0.92);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
+  }
+}
+
+.female-touch-hint {
+  top: calc(66% + 115px);
+  z-index: 21;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(92, 22, 32, 0.85);
+  backdrop-filter: blur(4px);
 }
 
 /* =========================================
