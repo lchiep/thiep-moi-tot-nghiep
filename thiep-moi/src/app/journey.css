@@ -555,48 +555,6 @@ button {
   }
 }
 
-/* Dense branch-with-leaves shadow drawn on top of the persisted photo,
-   sitting on the card's glass surface. Flush against the card's own
-   edges (no negative offset, no oversized transform) on purpose: an
-   ancestor with actual layout overflow -- even one that's
-   overflow: hidden -- is still a "scroll container" Chromium will
-   auto-scroll to reveal a focused field, which silently reintroduced a
-   "popup can scroll" bug earlier when this bled past the card edge. */
-.branch-shadow-svg {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 220px;
-  height: 480px;
-  pointer-events: none;
-  /* Above the header/fields (z-index 2), not behind them -- the shadow
-     should darken the field surfaces themselves via multiply, matching
-     the reference, instead of being hidden behind their backgrounds. */
-  z-index: 4;
-  filter: blur(0.5px);
-  opacity: 0.58;
-  mix-blend-mode: multiply;
-}
-
-.branch-shadow-svg g {
-  fill: rgba(28, 20, 12, 0.62);
-}
-
-.branch-shadow-sway {
-  transform-origin: 90% 2%;
-  animation: branch-shadow-sway-anim 7s ease-in-out infinite;
-}
-
-@keyframes branch-shadow-sway-anim {
-  0%,
-  100% {
-    transform: rotate(-3deg);
-  }
-  50% {
-    transform: rotate(3.5deg);
-  }
-}
-
 /* Ambient light glow behind the popup, visible through its glass blur. */
 .background-light {
   position: absolute;
