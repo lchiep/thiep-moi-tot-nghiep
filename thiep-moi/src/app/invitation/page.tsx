@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Lenis from "lenis";
+import Snap from "lenis/snap";
 import { GraduationCap, ScrollText, Flower2, Mail, MapPin } from "lucide-react";
 import { readGuest } from "@/lib/guestStorage";
 import CountdownTimer from "@/components/invitation/CountdownTimer";
@@ -52,7 +54,8 @@ export default function InvitationPage() {
 
   useEffect(() => {
     const node = scrollRef.current;
-    if (!node) return;
+    const content = node?.firstElementChild as HTMLElement | null;
+    if (!node || !content) return;
 
     let ticking = false;
 
@@ -70,7 +73,26 @@ export default function InvitationPage() {
     };
 
     node.addEventListener("scroll", handleScroll, { passive: true });
-    return () => node.removeEventListener("scroll", handleScroll);
+
+    // Buttery smooth momentum + snap between the 5 cards, replacing native
+    // CSS scroll-snap (Lenis drives scrollTop itself, so the listener above
+    // still sees ordinary "scroll" events). Respects prefers-reduced-motion
+    // on its own.
+    const lenis = new Lenis({ wrapper: node, content, autoRaf: true, duration: 1 });
+    const snap = new Snap(lenis, { type: "mandatory" });
+    // `snap.addElement()` measures each card's position relative to the
+    // *viewport*, which is wrong here since `.invite-scroll` doesn't start
+    // at the viewport's top (the 40% header sits above it). Using each
+    // card's own `offsetTop` (relative to the positioned `.invite-scroll`
+    // wrapper) gives the correct scrollTop target instead.
+    const cards = node.querySelectorAll<HTMLElement>(".invite-card");
+    cards.forEach((card) => snap.add(card.offsetTop));
+
+    return () => {
+      node.removeEventListener("scroll", handleScroll);
+      snap.destroy();
+      lenis.destroy();
+    };
   }, []);
 
   const isNam = gender !== "Nữ";
@@ -112,87 +134,89 @@ export default function InvitationPage() {
       </header>
 
       <div className="invite-scroll" ref={scrollRef}>
-        <article className="invite-card">
-          <p className="card-index">01</p>
-          <h2 className="card-title">Lời Mời Thân Mật</h2>
-          <p className="card-kicker">TRÂN TRỌNG KÍNH MỜI</p>
-          <p className="card-body">
-            Gửi <strong>{nickname}</strong>, mình rất vui mừng được mời bạn đến chung vui trong
-            ngày tốt nghiệp — một cột mốc quan trọng sau bao nỗ lực. Sự hiện diện của bạn sẽ là
-            món quà ý nghĩa nhất.
-          </p>
-          <p className="card-signoff">— Trân trọng —</p>
-        </article>
+        <div className="invite-scroll-inner">
+          <article className="invite-card">
+            <p className="card-index">01</p>
+            <h2 className="card-title">Lời Mời Thân Mật</h2>
+            <p className="card-kicker">TRÂN TRỌNG KÍNH MỜI</p>
+            <p className="card-body">
+              Gửi <strong>{nickname}</strong>, mình rất vui mừng được mời bạn đến chung vui trong
+              ngày tốt nghiệp — một cột mốc quan trọng sau bao nỗ lực. Sự hiện diện của bạn sẽ là
+              món quà ý nghĩa nhất.
+            </p>
+            <p className="card-signoff">— Trân trọng —</p>
+          </article>
 
-        <article className="invite-card">
-          <p className="card-index">02</p>
-          <h2 className="card-title">Thời Gian &amp; Địa Điểm</h2>
-          <div className="event-detail-row">
-            <span className="event-detail-label">Thời gian</span>
-            <span>08:00 — 11:30, Thứ Bảy, 15/10/2026</span>
-          </div>
-          <div className="event-detail-row">
-            <span className="event-detail-label">Địa điểm</span>
-            <span>Hội trường Lễ Tốt Nghiệp, 123 Đường ABC, Quận 1, TP.HCM</span>
-          </div>
-          <div className="map-embed">
-            <iframe
-              title="Bản đồ địa điểm tổ chức"
-              src={`https://www.google.com/maps?q=${MAP_QUERY}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-          <a
-            className="map-link"
-            href={`https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MapPin size={16} /> Xem chỉ đường
-          </a>
-        </article>
+          <article className="invite-card">
+            <p className="card-index">02</p>
+            <h2 className="card-title">Thời Gian &amp; Địa Điểm</h2>
+            <div className="event-detail-row">
+              <span className="event-detail-label">Thời gian</span>
+              <span>08:00 — 11:30, Thứ Bảy, 15/10/2026</span>
+            </div>
+            <div className="event-detail-row">
+              <span className="event-detail-label">Địa điểm</span>
+              <span>Hội trường Lễ Tốt Nghiệp, 123 Đường ABC, Quận 1, TP.HCM</span>
+            </div>
+            <div className="map-embed">
+              <iframe
+                title="Bản đồ địa điểm tổ chức"
+                src={`https://www.google.com/maps?q=${MAP_QUERY}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <a
+              className="map-link"
+              href={`https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MapPin size={16} /> Xem chỉ đường
+            </a>
+          </article>
 
-        <article className="invite-card">
-          <p className="card-index">03</p>
-          <h2 className="card-title">Hướng Dẫn Khách Mời</h2>
-          <ul className="guide-list">
-            <li>Trang phục lịch sự, khuyến khích tông màu be/vàng đồng để hợp không khí lễ.</li>
-            <li>Bãi giữ xe miễn phí ngay cổng chính của hội trường.</li>
-            <li>Vui lòng có mặt trước giờ khai mạc 15 phút để ổn định chỗ ngồi.</li>
-            <li>Liên hệ hotline 0900 000 000 nếu cần hỗ trợ trong ngày sự kiện.</li>
-          </ul>
-        </article>
+          <article className="invite-card">
+            <p className="card-index">03</p>
+            <h2 className="card-title">Hướng Dẫn Khách Mời</h2>
+            <ul className="guide-list">
+              <li>Trang phục lịch sự, khuyến khích tông màu be/vàng đồng để hợp không khí lễ.</li>
+              <li>Bãi giữ xe miễn phí ngay cổng chính của hội trường.</li>
+              <li>Vui lòng có mặt trước giờ khai mạc 15 phút để ổn định chỗ ngồi.</li>
+              <li>Liên hệ hotline 0900 000 000 nếu cần hỗ trợ trong ngày sự kiện.</li>
+            </ul>
+          </article>
 
-        <article className="invite-card">
-          <p className="card-index">04</p>
-          <h2 className="card-title">Lịch Trình &amp; Lời Chúc</h2>
-          <CountdownTimer />
-          <ol className="schedule-list">
-            <li>
-              <span>08:00</span>Đón khách &amp; ổn định chỗ ngồi
-            </li>
-            <li>
-              <span>08:30</span>Lễ trao bằng tốt nghiệp
-            </li>
-            <li>
-              <span>10:00</span>Phát biểu &amp; chụp ảnh lưu niệm
-            </li>
-            <li>
-              <span>11:00</span>Tiệc nhẹ &amp; giao lưu
-            </li>
-          </ol>
-          <WishesBook defaultName={nickname} />
-        </article>
+          <article className="invite-card">
+            <p className="card-index">04</p>
+            <h2 className="card-title">Lịch Trình &amp; Lời Chúc</h2>
+            <CountdownTimer />
+            <ol className="schedule-list">
+              <li>
+                <span>08:00</span>Đón khách &amp; ổn định chỗ ngồi
+              </li>
+              <li>
+                <span>08:30</span>Lễ trao bằng tốt nghiệp
+              </li>
+              <li>
+                <span>10:00</span>Phát biểu &amp; chụp ảnh lưu niệm
+              </li>
+              <li>
+                <span>11:00</span>Tiệc nhẹ &amp; giao lưu
+              </li>
+            </ol>
+            <WishesBook defaultName={nickname} />
+          </article>
 
-        <article className="invite-card">
-          <p className="card-index">05</p>
-          <h2 className="card-title">Xác Nhận Tham Dự</h2>
-          <p className="card-body">
-            Vui lòng cho mình biết bạn có thể đến chung vui trong ngày đặc biệt này không nhé.
-          </p>
-          <RsvpForm defaultName={nickname} />
-        </article>
+          <article className="invite-card">
+            <p className="card-index">05</p>
+            <h2 className="card-title">Xác Nhận Tham Dự</h2>
+            <p className="card-body">
+              Vui lòng cho mình biết bạn có thể đến chung vui trong ngày đặc biệt này không nhé.
+            </p>
+            <RsvpForm defaultName={nickname} />
+          </article>
+        </div>
       </div>
     </main>
   );

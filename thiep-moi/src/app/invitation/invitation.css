@@ -174,12 +174,12 @@ body {
 ========================================= */
 
 .invite-scroll {
+  position: relative;
   flex: 1 1 60dvh;
   height: 60dvh;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-snap-stop: always;
+  overscroll-behavior-y: contain;
   scrollbar-width: none;
   background: linear-gradient(180deg, #7a2430, #5c1a24);
 }
@@ -188,11 +188,11 @@ body {
   display: none;
 }
 
+/* Snapping between cards is driven by Lenis (see invitation/page.tsx) for
+   smooth momentum instead of native CSS scroll-snap. */
 .invite-card {
   position: relative;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  min-height: 100%;
+  min-height: 60dvh;
   padding: 30px 22px 34px;
   display: flex;
   flex-direction: column;
