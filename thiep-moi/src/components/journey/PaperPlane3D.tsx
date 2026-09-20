@@ -19,6 +19,13 @@ const FLIGHT_WAYPOINTS: [number, number][] = [
 
 const LAND_POINT: [number, number] = [50, 61];
 
+// The model's nose points along local +Z, which is straight down the
+// camera's viewing axis at rotation (0,0,0) -- that's what made it look
+// like a flat diamond instead of a plane. This yaws/pitches/banks it
+// into a classic 3/4 "flying up and to the right" pose, so the long
+// body and both wings are always visible in silhouette.
+const BASE_ROTATION = { x: -0.25, y: -0.75, z: -0.2 };
+
 function percentToWorld(
   point: [number, number],
   viewport: { width: number; height: number },
@@ -175,30 +182,55 @@ function FlyingPlane({
       const ahead = curve.getPointAt(Math.min(eased + 0.02, 1));
       group.current.position.copy(pos);
 
+      // Fully re-orienting the plane to face its literal travel direction
+      // meant that whenever it flew mostly sideways (which is most of the
+      // time, since the path runs left-to-right across the screen), its
+      // nose swung to point toward the camera and the wings -- which are
+      // spread along the model's local X axis -- foreshortened almost to
+      // nothing. Result: a flat diamond instead of a recognizable plane.
+      // Keep a fixed, camera-facing "flying" pose (nose up-right, wings
+      // spread across the view) at all times, and only wobble gently
+      // around it based on direction, so it always reads as a paper
+      // plane first and a physically-accurate glider a distant second.
       const dir = ahead.clone().sub(pos);
-      if (dir.lengthSq() > 0.0001) {
-        const targetYaw = Math.atan2(dir.x, 0.6);
-        const targetPitch = Math.atan2(-dir.y, 0.6);
-        const targetRoll = -dir.x * 0.9;
-        group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetYaw, 0.15);
-        group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, targetPitch, 0.15);
-        group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, targetRoll, 0.15);
-      }
+      const turnLean = THREE.MathUtils.clamp(-dir.x * 0.5, -0.2, 0.2);
+      const climbLean = THREE.MathUtils.clamp(-dir.y * 0.4, -0.15, 0.15);
+      group.current.rotation.x = THREE.MathUtils.lerp(
+        group.current.rotation.x,
+        BASE_ROTATION.x + climbLean,
+        0.12,
+      );
+      group.current.rotation.y = THREE.MathUtils.lerp(
+        group.current.rotation.y,
+        BASE_ROTATION.y + turnLean * 0.6,
+        0.12,
+      );
+      group.current.rotation.z = THREE.MathUtils.lerp(
+        group.current.rotation.z,
+        BASE_ROTATION.z + turnLean,
+        0.12,
+      );
     } else {
-      // landed: settle at rest position, gentle idle bob
+      // landed: settle at rest position, gentle idle bob around the same
+      // base pose (not rotation 0 -- that was the other place the flat
+      // top-down silhouette showed up).
       bobPhase.current += delta;
       group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, landPos.x, 0.12);
       group.current.position.y = landPos.y + Math.sin(bobPhase.current * 1.6) * 0.015;
       group.current.position.z = THREE.MathUtils.lerp(group.current.position.z, landPos.z, 0.12);
-      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, 0, 0.1);
+      group.current.rotation.x = THREE.MathUtils.lerp(
+        group.current.rotation.x,
+        BASE_ROTATION.x,
+        0.1,
+      );
       group.current.rotation.z = THREE.MathUtils.lerp(
         group.current.rotation.z,
-        Math.sin(bobPhase.current * 1.3) * 0.05,
+        BASE_ROTATION.z + Math.sin(bobPhase.current * 1.3) * 0.05,
         0.1,
       );
       group.current.rotation.y = THREE.MathUtils.lerp(
         group.current.rotation.y,
-        Math.sin(bobPhase.current * 0.9) * 0.08,
+        BASE_ROTATION.y + Math.sin(bobPhase.current * 0.9) * 0.06,
         0.05,
       );
     }
