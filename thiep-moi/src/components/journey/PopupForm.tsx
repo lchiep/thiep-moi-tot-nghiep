@@ -175,35 +175,33 @@ export default function PopupForm({
             </div>
           </div>
 
-          <div className="field-row">
-            <div className="field">
-              <label>Số điện thoại</label>
-              <div className="input-glass">
-                <span className="field-icon">
-                  <Phone size={19} />
-                </span>
-                <input
-                  type="tel"
-                  placeholder="Số điện thoại"
-                  value={form.phone}
-                  onChange={(e) => updateField("phone", e.target.value)}
-                />
-              </div>
+          <div className="field field-full">
+            <label>Số điện thoại</label>
+            <div className="input-glass">
+              <span className="field-icon">
+                <Phone size={19} />
+              </span>
+              <input
+                type="tel"
+                placeholder="Số điện thoại"
+                value={form.phone}
+                onChange={(e) => updateField("phone", e.target.value)}
+              />
             </div>
+          </div>
 
-            <div className="field">
-              <label>CCCD</label>
-              <div className="input-glass">
-                <span className="field-icon">
-                  <CreditCard size={19} />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Số CCCD"
-                  value={form.cccd}
-                  onChange={(e) => updateField("cccd", e.target.value)}
-                />
-              </div>
+          <div className="field field-full">
+            <label>CCCD</label>
+            <div className="input-glass">
+              <span className="field-icon">
+                <CreditCard size={19} />
+              </span>
+              <input
+                type="text"
+                placeholder="Số CCCD"
+                value={form.cccd}
+                onChange={(e) => updateField("cccd", e.target.value)}
+              />
             </div>
           </div>
 
@@ -227,31 +225,29 @@ export default function PopupForm({
             </div>
           </div>
 
-          <div className="field-row">
-            <div className="field">
-              <label>Email</label>
-              <div className="input-glass">
-                <span className="field-icon">
-                  <Mail size={19} />
-                </span>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={(e) => updateField("email", e.target.value)}
-                />
-              </div>
+          <div className="field field-full">
+            <label>Email</label>
+            <div className="input-glass">
+              <span className="field-icon">
+                <Mail size={19} />
+              </span>
+              <input
+                type="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => updateField("email", e.target.value)}
+              />
             </div>
+          </div>
 
-            <div className="field">
-              <label>Ngày sinh</label>
-              <div className="input-glass">
-                <DatePickerField
-                  value={form.dob}
-                  onChange={(value) => updateField("dob", value)}
-                  placeholder="Chọn ngày sinh"
-                />
-              </div>
+          <div className="field field-full">
+            <label>Ngày sinh</label>
+            <div className="input-glass">
+              <DatePickerField
+                value={form.dob}
+                onChange={(value) => updateField("dob", value)}
+                placeholder="Chọn ngày sinh"
+              />
             </div>
           </div>
 
