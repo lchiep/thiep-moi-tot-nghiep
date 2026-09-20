@@ -88,7 +88,7 @@ export default function CallScreen({ onAnswered }: { onAnswered: () => void }) {
             </div>
           )}
           <div className="slider-text">
-            {answered ? "Đã kết nối" : "Vuốt để trả lời"}
+            {answered ? "Đã kết nối" : "Vuốt để xem típ"}
           </div>
           {!answered && <div className="slide-hint">→</div>}
         </div>

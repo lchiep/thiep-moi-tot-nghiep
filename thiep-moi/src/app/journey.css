@@ -316,7 +316,6 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 62px;
   color: rgba(255, 255, 255, 0.92);
   font-size: clamp(16px, 4vw, 21px);
   font-weight: 500;
