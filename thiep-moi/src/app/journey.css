@@ -146,8 +146,8 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0 max(18px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom) + 35px)
-    max(18px, env(safe-area-inset-left));
+  padding: 0 max(30px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom) + 35px)
+    max(30px, env(safe-area-inset-left));
   pointer-events: none;
 }
 
@@ -156,7 +156,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0 5%;
+  padding: 0 4%;
   margin-bottom: 28px;
   pointer-events: auto;
 }
@@ -245,7 +245,7 @@ button {
 
 .answer-slider {
   position: relative;
-  width: min(92vw, 620px);
+  width: min(100%, 620px);
   height: 78px;
   margin: 0 auto;
   border-radius: 999px;
@@ -406,15 +406,15 @@ button {
   max-height: 92dvh;
   transform: translate(-50%, -50%);
   padding: 16px;
-  overflow-y: auto;
+  overflow: hidden;
   border-radius: 28px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.32));
+  border: 1px solid rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(28px) saturate(135%);
   -webkit-backdrop-filter: blur(28px) saturate(135%);
   box-shadow:
     0 30px 100px rgba(0, 0, 0, 0.48),
-    inset 0 1px 1px rgba(255, 255, 255, 0.42);
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
   animation: popup-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 20;
 }
@@ -432,19 +432,21 @@ button {
 
 .popup-header {
   position: relative;
+  z-index: 2;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 18px;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.96);
+  color: rgba(25, 20, 15, 0.92);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.4px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .popup-back-button {
@@ -459,9 +461,9 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(20, 15, 10, 0.18);
+  background: rgba(255, 255, 255, 0.35);
+  color: rgba(25, 20, 15, 0.85);
   cursor: pointer;
   transition:
     background 0.2s ease,
@@ -469,7 +471,7 @@ button {
 }
 
 .popup-back-button:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .popup-back-button:active {
@@ -549,133 +551,151 @@ button {
   }
 }
 
-.leaf-shadow {
+/* Sits directly on the glass card's surface, like sunlight casting a crisp
+   branch shadow onto glass -- not hidden behind the card's own backdrop
+   blur, which would turn it into a shapeless soft blob. */
+.leaf-branch-svg {
   position: absolute;
-  width: 280px;
-  height: 500px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.32), transparent 65%);
-  filter: blur(16px);
-  opacity: 0.55;
+  width: 230px;
+  height: 340px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 0;
+  filter: blur(1px);
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.leaf-branch-svg g {
+  fill: rgba(35, 26, 16, 0.55);
+}
+
+/* The sway happens on an inner <g>, separate from the outer positioning
+   transform, so the two don't clobber each other. */
+.leaf-branch-sway {
+  transform-origin: 10% 5%;
+  animation: leaf-sway 6s ease-in-out infinite;
 }
 
 .leaf-shadow-one {
-  left: 0;
-  top: -60px;
-  transform: rotate(-22deg);
-  animation: leaf-float-one 10s ease-in-out infinite alternate;
+  left: -10px;
+  top: -20px;
+  transform: rotate(-6deg);
 }
 
 .leaf-shadow-two {
-  right: -100px;
-  top: 20%;
-  transform: rotate(25deg);
-  animation: leaf-float-two 13s ease-in-out infinite alternate;
+  right: -50px;
+  bottom: -30px;
+  transform: scaleX(-1) rotate(-10deg);
+  opacity: 0.32;
 }
 
-@keyframes leaf-float-one {
-  0% {
-    transform: rotate(-22deg) translate(0, 0);
-  }
+.leaf-shadow-two .leaf-branch-sway {
+  animation-delay: 1.2s;
+  animation-duration: 7.5s;
+}
+
+@keyframes leaf-sway {
+  0%,
   100% {
-    transform: rotate(-15deg) translate(65px, 30px);
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(4deg);
   }
 }
 
-@keyframes leaf-float-two {
-  0% {
-    transform: rotate(25deg) translate(0, 0);
-  }
-  100% {
-    transform: rotate(12deg) translate(-50px, -20px);
-  }
-}
-
-/* Water drops + sparkles sit on top of the glass card itself. */
+/* Water drops + sparkles sit on top of the glass card itself. The outer
+   .water-drop only positions + moves the drop; the actual teardrop shape
+   lives on .drop-shape (a square rotated 45deg with one square corner
+   rounded off), so movement keyframes never fight the shape transform. */
 .water-drop {
   position: absolute;
-  border-radius: 50%;
   pointer-events: none;
   z-index: 20;
-  background: radial-gradient(
-    circle at 27% 20%,
-    rgba(255, 255, 255, 0.88) 0%,
-    rgba(255, 255, 255, 0.45) 4%,
-    rgba(255, 255, 255, 0.14) 15%,
-    rgba(255, 255, 255, 0.04) 38%,
-    rgba(255, 255, 255, 0.01) 62%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  box-shadow:
-    inset -8px -8px 13px rgba(0, 0, 0, 0.12),
-    inset 5px 6px 13px rgba(255, 255, 255, 0.23),
-    0 12px 24px rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  overflow: hidden;
 }
 
-.water-drop::before {
+.drop-shape {
+  width: 100%;
+  height: 100%;
+  border-radius: 50% 50% 50% 4%;
+  transform: rotate(45deg);
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.2) 8%,
+    rgba(255, 255, 255, 0.05) 24%,
+    rgba(120, 100, 80, 0.02) 55%,
+    rgba(90, 70, 50, 0.1) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset -5px -6px 9px rgba(60, 45, 30, 0.16),
+    inset 3px 4px 8px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+}
+
+.drop-shape::after {
   content: "";
   position: absolute;
   inset: 8%;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   filter: blur(0.5px);
 }
 
 .drop-highlight {
   position: absolute;
-  width: 25%;
+  width: 26%;
   height: 14%;
-  left: 20%;
-  top: 18%;
+  left: 26%;
+  top: 22%;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(255, 255, 255, 0.9);
   filter: blur(1px);
-  transform: rotate(-25deg);
+  transform: rotate(-45deg);
 }
 
 .drop-one {
-  width: 80px;
-  height: 80px;
-  right: 7%;
-  top: 42%;
-  animation: drop-float-one 7s ease-in-out infinite;
+  width: 56px;
+  height: 62px;
+  right: 12%;
+  top: 40%;
+  animation: drop-float-one 13s ease-in-out infinite;
 }
 
 .drop-two {
-  width: 46px;
-  height: 46px;
-  left: 10%;
-  top: 23%;
-  animation: drop-float-two 8s ease-in-out infinite;
+  width: 34px;
+  height: 38px;
+  left: 14%;
+  top: 26%;
+  animation: drop-float-two 15s ease-in-out infinite;
 }
 
 .drop-three {
-  width: 58px;
-  height: 58px;
-  right: 18%;
-  bottom: 18%;
-  animation: drop-float-three 9s ease-in-out infinite;
+  width: 42px;
+  height: 46px;
+  right: 22%;
+  bottom: 22%;
+  animation: drop-float-three 17s ease-in-out infinite;
 }
 
 .drop-four {
-  width: 30px;
-  height: 30px;
-  left: 17%;
-  bottom: 30%;
-  animation: drop-float-four 6s ease-in-out infinite;
+  width: 22px;
+  height: 25px;
+  left: 20%;
+  bottom: 32%;
+  animation: drop-float-four 11s ease-in-out infinite;
 }
 
 .drop-five {
-  width: 24px;
-  height: 24px;
-  right: 39%;
-  top: 12%;
+  width: 18px;
+  height: 20px;
+  right: 42%;
+  top: 15%;
   opacity: 0.65;
-  animation: drop-float-five 5s ease-in-out infinite;
+  animation: drop-float-five 9.5s ease-in-out infinite;
 }
 
 @keyframes drop-float-one {
@@ -683,14 +703,14 @@ button {
   100% {
     transform: translate3d(0, 0, 0) scale(1);
   }
-  25% {
-    transform: translate3d(7px, -10px, 0) scale(1.03);
+  22% {
+    transform: translate3d(38px, -46px, 0) scale(1.05);
   }
-  50% {
-    transform: translate3d(-5px, 8px, 0) scale(0.98);
+  48% {
+    transform: translate3d(-30px, 32px, 0) scale(0.94);
   }
-  75% {
-    transform: translate3d(10px, 13px, 0) scale(1.02);
+  74% {
+    transform: translate3d(46px, 40px, 0) scale(1.03);
   }
 }
 
@@ -699,8 +719,11 @@ button {
   100% {
     transform: translate(0, 0) rotate(0deg);
   }
-  50% {
-    transform: translate(18px, 13px) rotate(12deg);
+  30% {
+    transform: translate(52px, 34px) rotate(10deg);
+  }
+  65% {
+    transform: translate(20px, 70px) rotate(-8deg);
   }
 }
 
@@ -709,8 +732,11 @@ button {
   100% {
     transform: translate(0, 0) scale(1);
   }
-  50% {
-    transform: translate(-14px, -20px) scale(1.06);
+  35% {
+    transform: translate(-48px, -58px) scale(1.08);
+  }
+  70% {
+    transform: translate(-70px, 10px) scale(0.95);
   }
 }
 
@@ -719,8 +745,11 @@ button {
   100% {
     transform: translate(0, 0);
   }
-  50% {
-    transform: translate(13px, -15px);
+  40% {
+    transform: translate(40px, -48px);
+  }
+  75% {
+    transform: translate(-24px, -20px);
   }
 }
 
@@ -729,8 +758,11 @@ button {
   100% {
     transform: translate(0, 0);
   }
-  50% {
-    transform: translate(-8px, 12px);
+  45% {
+    transform: translate(-34px, 44px);
+  }
+  80% {
+    transform: translate(30px, 20px);
   }
 }
 
@@ -775,13 +807,15 @@ button {
 }
 
 .profile-form {
+  position: relative;
+  z-index: 2;
   margin-top: 12px;
   padding: 16px;
   border-radius: 21px;
-  background: rgba(20, 22, 28, 0.55);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .field-row {
@@ -797,7 +831,7 @@ button {
 .field label {
   display: block;
   margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(25, 20, 15, 0.88);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -809,9 +843,9 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(20, 15, 10, 0.14);
   border-radius: 13px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.4);
   padding: 0 12px;
   transition: 0.25s ease;
 }
@@ -823,7 +857,7 @@ button {
 
 .field-icon {
   display: flex;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(25, 20, 15, 0.5);
   flex-shrink: 0;
 }
 
@@ -832,7 +866,7 @@ button {
   width: 100%;
   border: 0;
   background: transparent;
-  color: #f4f4f6;
+  color: #16130f;
   outline: none;
 }
 
@@ -842,7 +876,7 @@ button {
 
 .input-glass input::placeholder,
 .textarea-glass textarea::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(25, 20, 15, 0.4);
 }
 
 .textarea-glass textarea {
@@ -855,14 +889,14 @@ button {
   position: absolute;
   right: 12px;
   top: 12px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(25, 20, 15, 0.32);
 }
 
 .input-glass:focus-within,
 .textarea-glass:focus-within {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  border-color: rgba(20, 15, 10, 0.35);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
 }
 
 .gender-row {
@@ -874,9 +908,9 @@ button {
 .gender {
   height: 42px;
   border-radius: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(20, 15, 10, 0.16);
+  background: rgba(255, 255, 255, 0.35);
+  color: rgba(25, 20, 15, 0.85);
   cursor: pointer;
   transition: 0.25s ease;
 }
