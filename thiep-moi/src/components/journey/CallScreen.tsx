@@ -49,9 +49,6 @@ export default function CallScreen({ onAnswered }: { onAnswered: () => void }) {
 
   return (
     <div className="phone-screen">
-      <div className="background-image" />
-      <div className="dark-overlay" />
-
       <section className="call-interface">
         <div className="top-actions">
           <button className="glass-action" type="button">

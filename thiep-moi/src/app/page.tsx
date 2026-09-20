@@ -39,6 +39,16 @@ export default function Home() {
       <div className="moving-light light-a" />
       <div className="moving-light light-b" />
 
+      {/* The MacBook + graduation cap photo is the same scene behind the
+          call screen AND the popup -- opening the popup must not swap it
+          out for the plain gradient underneath. */}
+      {(stage === "call" || stage === "form") && (
+        <>
+          <div className="background-image" />
+          <div className="dark-overlay" />
+        </>
+      )}
+
       {stage === "call" && <CallScreen onAnswered={() => setStage("form")} />}
 
       {stage === "form" && (
