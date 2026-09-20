@@ -407,13 +407,16 @@ button {
   padding: 12px;
   overflow: hidden;
   border-radius: 28px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.32));
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(28px) saturate(135%);
-  -webkit-backdrop-filter: blur(28px) saturate(135%);
+  /* Genuinely see-through glass -- the dark scene behind should read
+     clearly through the card, with only a faint white sheen, not a
+     milky/opaque wash. */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
   box-shadow:
     0 30px 100px rgba(0, 0, 0, 0.48),
-    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
   animation: popup-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 20;
 }
@@ -461,11 +464,11 @@ button {
   font-weight: 700;
   letter-spacing: -0.4px;
   text-shadow:
-    0 1px 8px rgba(0, 0, 0, 0.45),
-    0 1px 2px rgba(0, 0, 0, 0.35);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 1px 8px rgba(0, 0, 0, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .popup-back-button {
@@ -570,70 +573,70 @@ button {
   }
 }
 
-/* Sits directly on the glass card's surface, like sunlight casting a crisp
-   branch shadow onto glass -- not hidden behind the card's own backdrop
-   blur, which would turn it into a shapeless soft blob. */
-/* Positions are kept flush inside the card's own box (no negative
+/* Sits directly on the glass card's surface, like sunlight casting a
+   crisp window-frame shadow onto glass -- not hidden behind the card's
+   own backdrop blur, which would turn it into a shapeless soft blob.
+   Positions are kept flush inside the card's own box (no negative
    offsets) on purpose: an ancestor with any actual layout overflow --
    even one that's overflow: hidden -- is still a "scroll container" that
    Chromium will auto-scroll to reveal a focused descendant (a field
    gaining focus). Bleeding past the edge here silently reintroduced the
    "popup can scroll" bug even though no scrollbar was ever visible. */
-.leaf-branch-svg {
+.window-shadow-svg {
   position: absolute;
-  width: 260px;
-  height: 380px;
+  width: 280px;
+  height: 420px;
   pointer-events: none;
   z-index: 0;
   filter: blur(0.5px);
-  opacity: 0.62;
+  opacity: 0.55;
   mix-blend-mode: multiply;
 }
 
-.leaf-branch-svg g {
-  fill: rgba(28, 20, 12, 0.6);
+.window-shadow-svg g {
+  fill: rgba(20, 16, 12, 0.62);
 }
 
-/* The sway happens on an inner <g>, separate from the outer positioning
-   transform, so the two don't clobber each other. */
-.leaf-branch-sway {
-  transform-origin: 10% 5%;
-  animation: leaf-sway 6s ease-in-out infinite;
+/* A window frame doesn't sway -- only the light through it drifts very
+   slowly, like the sun moving or a thin curtain shifting. */
+.window-shadow-drift {
+  transform-origin: 50% 50%;
+  animation: window-light-drift 9s ease-in-out infinite;
 }
 
-/* The big, dominant shadow -- top-right down through the middle, matching
-   the reference (large, crisp, unmistakably a branch). */
-.leaf-shadow-one {
+.window-shadow-one {
   right: 0;
   top: 0;
-  transform: rotate(10deg);
+  transform: rotate(13deg);
 }
 
-/* A second, fainter shadow low on the other side for depth. Inset by a
-   little more than 0 -- its rotate/scaleX transform shifts the rendered
-   bounding box enough that Chromium counts it toward scrollHeight even
-   though the transform itself is purely visual. */
-.leaf-shadow-two {
+/* A second, fainter pane shadow low on the other side for depth. Inset
+   by a little more than 0 -- its rotate/scaleX transform shifts the
+   rendered bounding box enough that Chromium counts it toward
+   scrollHeight even though the transform itself is purely visual. */
+.window-shadow-two {
   left: 6px;
-  bottom: 16px;
+  bottom: 24px;
   width: 200px;
   height: 300px;
-  transform: scaleX(-1) rotate(-8deg);
-  opacity: 0.24;
+  transform: scaleX(-1) rotate(13deg);
+  opacity: 0.32;
 }
 
-.leaf-shadow-two .leaf-branch-sway {
-  animation-delay: 1.2s;
-  animation-duration: 7.5s;
+.window-shadow-two .window-shadow-drift {
+  animation-delay: 2s;
+  animation-duration: 11s;
 }
 
-@keyframes leaf-sway {
+@keyframes window-light-drift {
   0%,
   100% {
-    transform: rotate(-3deg);
+    transform: translate(0, 0);
+    opacity: 1;
   }
   50% {
-    transform: rotate(4deg);
+    transform: translate(3px, -4px);
+    opacity: 0.85;
   }
 }
 
@@ -850,10 +853,14 @@ button {
   margin-top: 10px;
   padding: 12px 14px;
   border-radius: 21px;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  /* Kept faint on purpose -- this wraps every field, so at any real
+     opacity it reads as one big milky wash over the whole card instead
+     of transparent glass. The individual .input-glass boxes below carry
+     the visible "field" contrast instead. */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .field-row {
