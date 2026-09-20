@@ -46,26 +46,24 @@ function colorForZ(z: number): THREE.Color {
   return TAIL_COLOR.clone().lerp(NOSE_COLOR, t);
 }
 
-// A folded paper-dart built from two triangular wing planes meeting at a
-// raised center spine -- a real 3D mesh (proper normals, catches light
-// as it banks) rather than a flat cutout.
+// A folded paper-dart: exactly two triangular wing planes meeting at a
+// raised center spine -- nothing else. The earlier version also had a
+// pair of thin "tail notch" sliver triangles meant to echo the classic
+// paper-plane notch, but at this scale/angle their edges sat almost flush
+// against the main wing edges and read as messy crossing lines instead
+// of a clean fold. A real 3D mesh (proper normals, catches light as it
+// banks) rather than a flat cutout, but kept to the simplest shape that
+// still reads unmistakably as a paper plane.
 function PlaneMesh() {
-  const geometry = useMemo(() => {
-    const nose = new THREE.Vector3(0, 0.02, 1.15);
-    const ridgeBack = new THREE.Vector3(0, 0.16, -0.75);
-    const leftBack = new THREE.Vector3(-0.85, -0.08, -0.95);
-    const rightBack = new THREE.Vector3(0.85, -0.08, -0.95);
-    const tailNotch = new THREE.Vector3(0, 0.04, -0.55);
+  const { geometry, edges } = useMemo(() => {
+    const nose = new THREE.Vector3(0, 0.03, 1.2);
+    const ridge = new THREE.Vector3(0, 0.18, -0.7);
+    const leftBack = new THREE.Vector3(-0.9, -0.05, -0.9);
+    const rightBack = new THREE.Vector3(0.9, -0.05, -0.9);
 
     const verts = [
-      // left wing (nose, ridge, leftBack)
-      nose, ridgeBack, leftBack,
-      // left wing underside tail sliver (ridge, tailNotch, leftBack)
-      ridgeBack, tailNotch, leftBack,
-      // right wing (nose, rightBack, ridge)
-      nose, rightBack, ridgeBack,
-      // right wing underside tail sliver (ridge, rightBack, tailNotch)
-      ridgeBack, rightBack, tailNotch,
+      nose, ridge, leftBack, // left wing
+      nose, rightBack, ridge, // right wing
     ];
 
     const positions = new Float32Array(verts.length * 3);
@@ -84,19 +82,28 @@ function PlaneMesh() {
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     geo.computeVertexNormals();
-    return geo;
+
+    return { geometry: geo, edges: new THREE.EdgesGeometry(geo, 1) };
   }, []);
 
   return (
-    <mesh geometry={geometry} castShadow>
-      <meshStandardMaterial
-        vertexColors
-        roughness={0.35}
-        metalness={0.06}
-        envMapIntensity={0.8}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <group>
+      <mesh geometry={geometry} castShadow>
+        <meshStandardMaterial
+          vertexColors
+          roughness={0.35}
+          metalness={0.06}
+          envMapIntensity={0.8}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Crisp dark edge along the fold + silhouette, matching the clean
+          line-art look of the reference icons instead of a flat-shaded
+          blob with no defined boundary. */}
+      <lineSegments geometry={edges}>
+        <lineBasicMaterial color="#5a3c1a" transparent opacity={0.55} />
+      </lineSegments>
+    </group>
   );
 }
 
