@@ -36,7 +36,6 @@ export default function ApprovalScene({
     window.setTimeout(onOpen, 480);
   };
 
-  const showPaperEnvelope = stage === "stamp" || stage === "transform" || stage === "flight";
   const showFemaleEnvelope =
     stage === "female-letter" || stage === "female-flight" || stage === "female-landed";
 
@@ -58,15 +57,17 @@ export default function ApprovalScene({
       )}
 
       {/* Both genders see the same paper get stamped -- only Nam keeps
-          this element around afterward (folding it into the plane); Nữ's
-          "stamp" stage was rendering the stamp tool over empty
-          background with nothing to stamp onto. */}
-      {(gender === "Nam" ? showPaperEnvelope : stage === "stamp") && (
-        <div
-          className={`approved-paper ${
-            stage === "transform" ? "paper-transforming" : ""
-          } ${stage === "flight" ? "paper-flying" : ""}`}
-        >
+          this element around through "transform", while it folds into
+          the plane. It used to also render through "flight" with a
+          "paper-flying" class that had no matching CSS rule, so the flat
+          paper just sat there fully visible, overlapping the plane, for
+          the entire ~2.5s flight -- it must be gone by the time the
+          plane is actually flying. Nữ's "stamp" stage previously
+          rendered the stamp tool over empty background with nothing to
+          stamp onto, so it gets the same paper too, just for that one
+          stage. */}
+      {(gender === "Nam" ? stage === "stamp" || stage === "transform" : stage === "stamp") && (
+        <div className={`approved-paper ${stage === "transform" ? "paper-transforming" : ""}`}>
           <div className="paper-lines">
             {Array.from({ length: 7 }).map((_, i) => (
               <div key={i} />

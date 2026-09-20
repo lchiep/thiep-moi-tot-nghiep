@@ -28,8 +28,12 @@ export default function Home() {
     }
 
     window.setTimeout(() => setStage("transform"), 1800);
-    window.setTimeout(() => setStage("flight"), 3300);
-    window.setTimeout(() => setStage("landed"), 5900);
+    // "transform" runs the 1.6s paper-to-plane fold (see journey.css) --
+    // give it the full 1.6s instead of cutting it off 100ms early, which
+    // was snapping the paper back to its unfolded, fully-opaque state
+    // for an instant right as "flight" began.
+    window.setTimeout(() => setStage("flight"), 3400);
+    window.setTimeout(() => setStage("landed"), 6000);
   };
 
   return (
