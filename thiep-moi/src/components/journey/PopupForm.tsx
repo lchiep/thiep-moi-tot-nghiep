@@ -17,9 +17,33 @@ import {
 import type { Gender } from "@/lib/guestStorage";
 import { DatePickerField } from "@/components/ui/date-picker";
 
-// A single natural branch shadow crossing the card's top-right corner,
-// with one moderate leaf cluster (not leaves scattered along the whole
-// branch -- that read as too dense/dark). Two independent Framer Motion
+// A pointed almond/leaf silhouette (not an ellipse -- ellipses read as
+// generic blobs/petals, this reads as an actual leaf) centered on its
+// own base point so it can be placed + rotated + scaled per instance.
+function Leaf({
+  cx,
+  cy,
+  size = 1,
+  rotate = 0,
+}: {
+  cx: number;
+  cy: number;
+  size?: number;
+  rotate?: number;
+}) {
+  return (
+    <path
+      className="leaf"
+      d="M0 0 C -7 -12 -5 -25 0 -35 C 5 -25 7 -12 0 0 Z"
+      transform={`translate(${cx} ${cy}) rotate(${rotate}) scale(${size})`}
+    />
+  );
+}
+
+// A natural branch shadow crossing the card's top-right corner, with a
+// full leaf cluster spanning from the top down through the "Họ và
+// tên"/CCCD rows -- matching the reference photo's coverage -- then
+// thinning to a bare branch lower down. Two independent Framer Motion
 // loops layer on top of the static SVG: the whole branch sways slowly
 // (like a gust moving the branch itself), while just the leaf cluster
 // flutters a bit faster and out of phase, so it reads as wind moving
@@ -38,26 +62,43 @@ function BranchShadow() {
         animate={{ rotate: [-3, 3.5, -3] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Pushed down ~55px from the raw path coordinates below so the
+        {/* Pushed down ~40px from the raw path coordinates below so the
             leaf cluster clears the popup header (z-index 5, opaque over
             the card's top ~58px) and lands visibly over the "Họ và
             tên"/"CCCD" fields instead of being hidden behind it. */}
-        <g transform="translate(0 55)">
+        <g transform="translate(0 40)">
           <path
             className="branch-line"
-            d="M175 0 C 150 40, 165 75, 130 115 S 90 190, 105 230 S 80 265, 65 265"
+            d="M180 -10 C 155 35, 170 70, 132 112 S 92 185, 108 225 S 82 260, 68 260"
           />
-          <path className="branch-twig" d="M140 100 C 122 93, 102 93, 88 103" />
+          <path className="branch-twig" d="M148 95 C 128 87, 106 88, 90 99" />
+          <path className="branch-twig" d="M112 195 C 96 190, 80 192, 68 202" />
           <motion.g
-            style={{ transformOrigin: "148px 55px" }}
-            animate={{ rotate: [-2, 2.2, -2] }}
+            style={{ transformOrigin: "150px 60px" }}
+            animate={{ rotate: [-2.2, 2.4, -2.2] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
           >
-            <ellipse className="leaf" cx="160" cy="15" rx="15" ry="6.5" transform="rotate(-25 160 15)" />
-            <ellipse className="leaf" cx="145" cy="35" rx="13" ry="6" transform="rotate(20 145 35)" />
-            <ellipse className="leaf" cx="155" cy="55" rx="14" ry="6.5" transform="rotate(-40 155 55)" />
-            <ellipse className="leaf" cx="125" cy="75" rx="15" ry="7" transform="rotate(15 125 75)" />
-            <ellipse className="leaf" cx="140" cy="95" rx="12" ry="5.5" transform="rotate(-15 140 95)" />
+            <Leaf cx={172} cy={-8} size={1.05} rotate={30} />
+            <Leaf cx={158} cy={5} size={0.9} rotate={-20} />
+            <Leaf cx={178} cy={18} size={1} rotate={55} />
+            <Leaf cx={150} cy={22} size={0.85} rotate={-45} />
+            <Leaf cx={165} cy={38} size={1.1} rotate={15} />
+            <Leaf cx={135} cy={45} size={0.95} rotate={-60} />
+            <Leaf cx={148} cy={62} size={1} rotate={40} />
+            <Leaf cx={118} cy={68} size={0.8} rotate={-15} />
+            <Leaf cx={128} cy={90} size={0.9} rotate={70} />
+            <Leaf cx={100} cy={100} size={0.75} rotate={-35} />
+          </motion.g>
+          {/* A couple of stray leaves lower down on the otherwise bare
+              branch, echoing the reference photo instead of leaving the
+              whole lower half completely empty. */}
+          <motion.g
+            style={{ transformOrigin: "96px 197px" }}
+            animate={{ rotate: [1.8, -2, 1.8] }}
+            transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+          >
+            <Leaf cx={96} cy={197} size={0.8} rotate={-25} />
+            <Leaf cx={78} cy={210} size={0.65} rotate={40} />
           </motion.g>
         </g>
       </motion.g>

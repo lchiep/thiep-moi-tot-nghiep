@@ -436,12 +436,15 @@ button {
   border-radius: 28px;
   /* Two separate things, both needed: a low-alpha tint (not a milky
      white wash -- the scene's color/light must read through) AND a
-     heavy blur (real frosted glass, so the photo behind becomes soft
-     washes of light and color, not a sharp window showing recognizable
-     objects like the laptop or the tassel). */
+     blur (real frosted glass). Lighter than before on purpose: the
+     photo behind has its own real window-pane shadow + a small leaf
+     silhouette in the top-left corner, and that shape should still read
+     through the glass (matching the reference) instead of being
+     smeared into a formless glow -- while still soft enough that the
+     laptop/tassel themselves stay unrecognizable. */
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
   border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(42px) saturate(130%);
+  backdrop-filter: blur(22px) saturate(130%);
   box-shadow:
     0 30px 100px rgba(0, 0, 0, 0.48),
     inset 0 1px 1px rgba(255, 255, 255, 0.35);
@@ -820,7 +823,10 @@ button {
   gap: 8px;
   border: 1px solid rgba(20, 15, 10, 0.14);
   border-radius: 13px;
-  background: rgba(255, 255, 255, 0.4);
+  /* A warm cream tint (not pure white) so the pill itself reads sunlit,
+     matching the reference instead of looking cool/gray against the
+     warm photo behind it. */
+  background: rgba(255, 244, 224, 0.42);
   padding: 0 12px;
   transition: 0.25s ease;
   /* Sunken-glass look: a soft dark shadow pooling along the top inner
