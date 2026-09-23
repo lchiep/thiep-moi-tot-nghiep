@@ -605,9 +605,12 @@ button {
 }
 
 /* Water drops + sparkles sit on top of the glass card itself. The outer
-   .water-drop only positions + moves the drop; the actual teardrop shape
-   lives on .drop-shape (a square rotated 45deg with one square corner
-   rounded off), so movement keyframes never fight the shape transform. */
+   .water-drop only positions the drop (base placement); Framer Motion
+   drives its drift/scale so the motion can be organic (eased, staggered
+   per-drop) instead of a fixed CSS keyframe loop. The actual jelly-drop
+   shape lives on .drop-shape, whose border-radius is also animated by
+   Framer Motion (soft blob wobble, like grass-jelly/thạch) -- the 50%
+   here is only the pre-hydration/SSR fallback shape. */
 .water-drop {
   position: absolute;
   pointer-events: none;
@@ -666,7 +669,6 @@ button {
   height: 64px;
   right: 12%;
   top: 40%;
-  animation: drop-float-one 13s ease-in-out infinite;
 }
 
 .drop-two {
@@ -674,7 +676,6 @@ button {
   height: 34px;
   left: 14%;
   top: 26%;
-  animation: drop-float-two 15s ease-in-out infinite;
 }
 
 .drop-three {
@@ -682,7 +683,6 @@ button {
   height: 50px;
   right: 8%;
   bottom: 2%;
-  animation: drop-float-three 17s ease-in-out infinite;
 }
 
 .drop-four {
@@ -690,7 +690,6 @@ button {
   height: 22px;
   left: 20%;
   bottom: 32%;
-  animation: drop-float-four 11s ease-in-out infinite;
 }
 
 .drop-five {
@@ -699,75 +698,6 @@ button {
   right: 42%;
   top: 15%;
   opacity: 0.65;
-  animation: drop-float-five 9.5s ease-in-out infinite;
-}
-
-@keyframes drop-float-one {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  22% {
-    transform: translate3d(38px, -46px, 0) scale(1.05);
-  }
-  48% {
-    transform: translate3d(-30px, 32px, 0) scale(0.94);
-  }
-  74% {
-    transform: translate3d(46px, 40px, 0) scale(1.03);
-  }
-}
-
-@keyframes drop-float-two {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  30% {
-    transform: translate(52px, 34px) rotate(10deg);
-  }
-  65% {
-    transform: translate(20px, 70px) rotate(-8deg);
-  }
-}
-
-@keyframes drop-float-three {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  35% {
-    transform: translate(-48px, -58px) scale(1.08);
-  }
-  70% {
-    transform: translate(-70px, 10px) scale(0.95);
-  }
-}
-
-@keyframes drop-float-four {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  40% {
-    transform: translate(40px, -48px);
-  }
-  75% {
-    transform: translate(-24px, -20px);
-  }
-}
-
-@keyframes drop-float-five {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  45% {
-    transform: translate(-34px, 44px);
-  }
-  80% {
-    transform: translate(30px, 20px);
-  }
 }
 
 .sparkle {
@@ -808,6 +738,44 @@ button {
     opacity: 1;
     transform: scale(1.2) rotate(15deg);
   }
+}
+
+/* A single natural branch shadow crossing the card's top-right corner --
+   one moderate leaf cluster near the top, the rest of the branch bare
+   (deliberately lighter/sparser than an earlier version that read as a
+   dense, too-dark leaf mass). Framer Motion drives the sway (outer
+   .branch-shadow-sway) and a faster, smaller flutter on just the leaf
+   cluster (.branch-shadow-leaves), so it reads as wind moving the whole
+   branch plus the leaves fluttering independently, not one rigid rotation. */
+.branch-shadow-svg {
+  position: absolute;
+  right: -6px;
+  top: -4px;
+  width: 190px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.62;
+  filter: blur(0.4px);
+  mix-blend-mode: multiply;
+}
+
+.branch-shadow-svg .branch-line {
+  fill: none;
+  stroke: rgba(20, 14, 8, 0.85);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.branch-shadow-svg .branch-twig {
+  fill: none;
+  stroke: rgba(20, 14, 8, 0.7);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.branch-shadow-svg .leaf {
+  fill: rgba(20, 14, 8, 0.75);
 }
 
 .profile-form {
@@ -855,6 +823,13 @@ button {
   background: rgba(255, 255, 255, 0.4);
   padding: 0 12px;
   transition: 0.25s ease;
+  /* Sunken-glass look: a soft dark shadow pooling along the top inner
+     edge (like the field is pressed slightly into the card) plus a
+     thin bright inset along the bottom edge catching light, instead of
+     the flat single-tone box it was before. */
+  box-shadow:
+    inset 0 2px 4px rgba(20, 14, 8, 0.16),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .textarea-glass {
@@ -903,7 +878,10 @@ button {
 .textarea-glass:focus-within {
   border-color: rgba(20, 15, 10, 0.35);
   background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 2px 4px rgba(20, 14, 8, 0.12),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6),
+    0 0 0 3px rgba(255, 255, 255, 0.35);
 }
 
 .gender-row {
