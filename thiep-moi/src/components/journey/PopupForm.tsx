@@ -40,14 +40,20 @@ function Leaf({
   );
 }
 
-// A natural branch shadow crossing the card's top-right corner, with a
-// full leaf cluster spanning from the top down through the "Họ và
-// tên"/CCCD rows -- matching the reference photo's coverage -- then
-// thinning to a bare branch lower down. Two independent Framer Motion
-// loops layer on top of the static SVG: the whole branch sways slowly
-// (like a gust moving the branch itself), while just the leaf cluster
-// flutters a bit faster and out of phase, so it reads as wind moving
-// through real foliage rather than one rigid shape rotating in place.
+// A natural branch shadow crossing the card's top-LEFT corner -- same
+// side as the warm window-light source (.form-popup::before), matching
+// the "light through a window + leaf shadow" formula used on the
+// call-screen photo. Covers only the header + first two fields ("Họ và
+// tên"/"Số điện thoại"), then fades out completely before CCCD -- it
+// does NOT run the full height of the card. (Mirrored via CSS
+// `transform: scaleX(-1)` on the .branch-shadow-svg element itself --
+// the path data below is authored as if anchored to the right, same as
+// before, and the CSS flip does the rest.) Two independent Framer
+// Motion loops layer on top of the static SVG: the whole branch sways
+// slowly (like a gust moving the branch itself), while just the leaf
+// cluster flutters a bit faster and out of phase, so it reads as wind
+// moving through real foliage rather than one rigid shape rotating in
+// place.
 function BranchShadow() {
   return (
     <svg
@@ -65,14 +71,12 @@ function BranchShadow() {
         {/* Pushed down ~40px from the raw path coordinates below so the
             leaf cluster clears the popup header (z-index 5, opaque over
             the card's top ~58px) and lands visibly over the "Họ và
-            tên"/"CCCD" fields instead of being hidden behind it. */}
+            tên"/"Số điện thoại" fields instead of being hidden behind
+            it. Stops short (ends ~y=152) instead of running the full
+            card height, so it's gone by the time CCCD starts. */}
         <g transform="translate(0 40)">
-          <path
-            className="branch-line"
-            d="M180 -10 C 155 35, 170 70, 132 112 S 92 185, 108 225 S 82 260, 68 260"
-          />
+          <path className="branch-line" d="M180 -10 C 155 35, 170 70, 132 112" />
           <path className="branch-twig" d="M148 95 C 128 87, 106 88, 90 99" />
-          <path className="branch-twig" d="M112 195 C 96 190, 80 192, 68 202" />
           <motion.g
             style={{ transformOrigin: "150px 60px" }}
             animate={{ rotate: [-2.2, 2.4, -2.2] }}
@@ -86,19 +90,6 @@ function BranchShadow() {
             <Leaf cx={135} cy={45} size={0.95} rotate={-60} />
             <Leaf cx={148} cy={62} size={1} rotate={40} />
             <Leaf cx={118} cy={68} size={0.8} rotate={-15} />
-            <Leaf cx={128} cy={90} size={0.9} rotate={70} />
-            <Leaf cx={100} cy={100} size={0.75} rotate={-35} />
-          </motion.g>
-          {/* A couple of stray leaves lower down on the otherwise bare
-              branch, echoing the reference photo instead of leaving the
-              whole lower half completely empty. */}
-          <motion.g
-            style={{ transformOrigin: "96px 197px" }}
-            animate={{ rotate: [1.8, -2, 1.8] }}
-            transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          >
-            <Leaf cx={96} cy={197} size={0.8} rotate={-25} />
-            <Leaf cx={78} cy={210} size={0.65} rotate={40} />
           </motion.g>
         </g>
       </motion.g>
@@ -106,11 +97,13 @@ function BranchShadow() {
   );
 }
 
-// Soft, wobbly "jelly" water drop (thạch-style) instead of a rigid glass
-// bubble: an outer loop drifts + gently breathes in scale (position/size
-// only), an inner loop independently morphs the blob's border-radius
-// through a few organic shapes, so it looks like it's jiggling rather
-// than just sliding around as a fixed circle.
+// Soft, wobbly "jelly" glass bubble (thạch-style) instead of a rigid
+// glass sphere: an outer loop drifts + gently breathes in scale
+// (position/size only), an inner loop independently morphs the blob's
+// border-radius through a few organic shapes, so it looks like it's
+// jiggling rather than just sliding around as a fixed circle. Purely
+// decorative -- exactly two of these sit on the card (see PopupForm
+// below), one plain, one with a sparkle glyph centered inside it.
 function JellyDrop({
   className,
   floatX,
@@ -118,6 +111,7 @@ function JellyDrop({
   duration,
   delay = 0,
   morphDelay = 0,
+  sparkle = false,
 }: {
   className: string;
   floatX: number[];
@@ -125,6 +119,7 @@ function JellyDrop({
   duration: number;
   delay?: number;
   morphDelay?: number;
+  sparkle?: boolean;
 }) {
   return (
     <motion.div
@@ -150,6 +145,7 @@ function JellyDrop({
         }}
       >
         <div className="drop-highlight" />
+        {sparkle && <div className="bubble-sparkle-icon">✦</div>}
       </motion.div>
     </motion.div>
   );
@@ -289,7 +285,7 @@ export default function PopupForm({
               </span>
               <input
                 type="text"
-                placeholder="Số CCCD"
+                placeholder="ID Number"
                 value={form.cccd}
                 onChange={(e) => updateField("cccd", e.target.value)}
               />
@@ -332,12 +328,12 @@ export default function PopupForm({
           </div>
 
           <div className="field field-full">
-            <label>Ngày sinh</label>
+            <label>Ngày sinh (Date of Birth)</label>
             <div className="input-glass">
               <DatePickerField
                 value={form.dob}
                 onChange={(value) => updateField("dob", value)}
-                placeholder="Chọn ngày sinh"
+                placeholder="Date, tháng, năm sinh"
               />
             </div>
           </div>
@@ -350,7 +346,7 @@ export default function PopupForm({
               </span>
               <input
                 type="text"
-                placeholder="Sở thích"
+                placeholder="Hobbies"
                 value={form.hobbies}
                 onChange={(e) => updateField("hobbies", e.target.value)}
               />
@@ -390,47 +386,20 @@ export default function PopupForm({
         </form>
 
         <JellyDrop
-          className="drop-one"
-          floatX={[0, 38, -30, 46, 0]}
-          floatY={[0, -46, 32, 40, 0]}
+          className="bubble-large"
+          floatX={[0, 20, -14, 22, 0]}
+          floatY={[0, -22, 16, 18, 0]}
           duration={13}
         />
         <JellyDrop
-          className="drop-two"
-          floatX={[0, 52, 20, 0]}
-          floatY={[0, 34, 70, 0]}
-          duration={15}
+          className="bubble-small"
+          floatX={[0, -14, 10, 0]}
+          floatY={[0, 12, -10, 0]}
+          duration={10}
           delay={0.4}
           morphDelay={0.5}
+          sparkle
         />
-        <JellyDrop
-          className="drop-three"
-          floatX={[0, -48, -70, 0]}
-          floatY={[0, -58, 10, 0]}
-          duration={17}
-          delay={0.8}
-          morphDelay={1}
-        />
-        <JellyDrop
-          className="drop-four"
-          floatX={[0, 40, -24, 0]}
-          floatY={[0, -48, -20, 0]}
-          duration={11}
-          delay={0.2}
-          morphDelay={0.3}
-        />
-        <JellyDrop
-          className="drop-five"
-          floatX={[0, -34, 30, 0]}
-          floatY={[0, 44, 20, 0]}
-          duration={9.5}
-          delay={0.6}
-          morphDelay={0.2}
-        />
-
-        <div className="sparkle sparkle-one">✦</div>
-        <div className="sparkle sparkle-two">✦</div>
-        <div className="sparkle sparkle-three">✦</div>
       </section>
     </>
   );
