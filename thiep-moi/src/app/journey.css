@@ -925,54 +925,52 @@ button {
   text-align: center;
 }
 
-/* Thin line-art icon (lucide Venus/Mars, not a filled glyph) in a
-   darker shade of the badge's own hue -- reads as ink on the badge,
-   not a glowing white icon. */
+/* Thin line-art icon (lucide Venus/Mars, not a filled glyph), colors
+   pixel-measured from the reference at the exact stroke location --
+   a darker, desaturated shade of the badge's own hue, not a glowing
+   white icon. */
 .gender.female .gender-icon {
-  color: #7a1638;
+  color: #a0485f;
 }
 
 .gender.male .gender-icon {
-  color: #0d3a5c;
+  color: #3f7496;
 }
 
 /* Each gender option's badge + pill fade carry their theme color at all
    times (not only when selected) -- Nữ is always rose, Nam always
-   blue. .active only nudges the border -- the reference itself shows
-   no strong lồi/lõm difference between selected and unselected, so the
-   change here stays subtle rather than swapping the whole look. */
+   blue. Colors pixel-measured from the reference: the badge fill is a
+   light coral/steel tone, and the pill body past the badge is a flat
+   near-white tint (not a long gradual fade) -- only a short transition
+   right at the badge edge, then flat the rest of the way. .active only
+   nudges the border -- the reference itself shows no strong lồi/lõm
+   difference between selected and unselected, so the change here stays
+   subtle rather than swapping the whole look. */
 .gender.female {
-  background: linear-gradient(
-    90deg,
-    rgba(246, 129, 181, 0.55) 0%,
-    rgba(255, 233, 240, 0.82) 45%,
-    rgba(255, 245, 248, 0.7) 100%
-  );
+  background: linear-gradient(90deg, #fda4b9 0%, #fde6e0 22%, #fde6e0 100%);
 }
 
 .gender.female .gender-icon-badge {
-  background: #ef6da3;
+  background: #fda4b9;
 }
 
 .gender.male {
-  background: linear-gradient(
-    90deg,
-    rgba(76, 169, 235, 0.55) 0%,
-    rgba(226, 242, 255, 0.82) 45%,
-    rgba(240, 248, 255, 0.7) 100%
-  );
+  /* Nam's own pill body is mostly hidden under the glass bubble in the
+     reference, so this pale-blue tone is derived by symmetry with Nữ's
+     measured badge->pill relationship rather than measured directly. */
+  background: linear-gradient(90deg, #87b2d2 0%, #e6eff7 22%, #e6eff7 100%);
 }
 
 .gender.male .gender-icon-badge {
-  background: #57a5e8;
+  background: #87b2d2;
 }
 
 .gender.female.active {
-  border-color: rgba(246, 129, 181, 0.55);
+  border-color: rgba(253, 164, 185, 0.7);
 }
 
 .gender.male.active {
-  border-color: rgba(76, 169, 235, 0.55);
+  border-color: rgba(135, 178, 210, 0.7);
 }
 
 .form-actions {
