@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// Deliberately using a local/system font stack (see globals.css) instead of
-// next/font/google: it self-hosts by fetching at build time, which fails in
-// network-restricted build environments. Swap in a real webfont later once
-// the visual direction is locked.
+// Fonts are loaded via runtime @import in each page's own CSS (not
+// next/font/google): next/font self-hosts by fetching at build time, which
+// fails in network-restricted build environments.
 
 export const metadata: Metadata = {
   title: "Thiệp mời tốt nghiệp",
-  description: "Trải nghiệm mở thiệp mời tốt nghiệp 3D — nhánh Nam",
+  description: "Thiệp mời tốt nghiệp tương tác — cuộc gọi, phong bì, và thư mời",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

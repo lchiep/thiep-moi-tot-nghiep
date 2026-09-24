@@ -1,0 +1,1886 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.graduation-page {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0d0d0d;
+  color: white;
+  isolation: isolate;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.scene-background {
+  position: absolute;
+  inset: -3%;
+  z-index: -5;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(201, 163, 95, 0.16), transparent 55%),
+    radial-gradient(ellipse at 75% 80%, rgba(120, 90, 60, 0.14), transparent 60%),
+    linear-gradient(160deg, #14161c 0%, #0c0d11 60%, #08090c 100%);
+  transform: scale(1.03);
+  animation: background-breathe 14s ease-in-out infinite alternate;
+}
+
+@keyframes background-breathe {
+  0% {
+    transform: scale(1.03) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.045) translate3d(-5px, 2px, 0);
+  }
+  100% {
+    transform: scale(1.03) translate3d(4px, -3px, 0);
+  }
+}
+
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(0, 0, 0, 0.17) 70%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.moving-light {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+  z-index: -2;
+  mix-blend-mode: screen;
+}
+
+.light-a {
+  width: 320px;
+  height: 320px;
+  top: -100px;
+  left: -100px;
+  background: rgba(255, 191, 133, 0.13);
+  animation: light-one 10s ease-in-out infinite alternate;
+}
+
+.light-b {
+  width: 280px;
+  height: 280px;
+  right: -120px;
+  bottom: -100px;
+  background: rgba(217, 148, 96, 0.08);
+  animation: light-two 13s ease-in-out infinite alternate;
+}
+
+@keyframes light-one {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(90px, 110px, 0);
+  }
+}
+
+@keyframes light-two {
+  0% {
+    transform: translate3d(30px, 20px, 0);
+  }
+  100% {
+    transform: translate3d(-90px, -100px, 0);
+  }
+}
+
+/* =========================================
+   CALL SCREEN
+========================================= */
+
+.phone-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.background-image {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background-image: url("/images/graduation-bg.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+/* A second copy of the exact same photo, same cover-fit, so it lines up
+   pixel-for-pixel with .background-image at rest. A soft round mask
+   reveals only the small leaf in the top-left corner; rotating this
+   layer makes that one real, photographed leaf sway, instead of a drawn
+   shape trying to imitate it. */
+.background-image-leaf {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background-image: url("/images/graduation-bg.webp");
+  background-size: cover;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(circle 58px at 22px 88px, black 45%, transparent 100%);
+  mask-image: radial-gradient(circle 58px at 22px 88px, black 45%, transparent 100%);
+  transform-origin: 4px 82px;
+  animation: leaf-photo-sway 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes leaf-photo-sway {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.02) 35%,
+    rgba(0, 0, 0, 0.16) 65%,
+    rgba(0, 0, 0, 0.36) 100%
+  );
+  pointer-events: none;
+}
+
+.call-interface {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 max(30px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom) + 35px)
+    max(30px, env(safe-area-inset-left));
+  pointer-events: none;
+}
+
+.top-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 4%;
+  margin-bottom: 28px;
+  pointer-events: auto;
+}
+
+.glass-action {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  padding: 0;
+  user-select: none;
+  animation:
+    actionFloat 2.6s ease-in-out infinite,
+    actionShake 1.8s ease-in-out infinite;
+}
+
+.glass-action:nth-child(2) {
+  animation-delay: 0.25s;
+}
+
+.icon-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: rgba(50, 50, 52, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.glass-action:active .icon-circle {
+  transform: scale(0.94);
+}
+
+.action-label {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes actionShake {
+  0%,
+  88%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  90% {
+    transform: translateX(-1px) rotate(-1deg);
+  }
+  92% {
+    transform: translateX(2px) rotate(1deg);
+  }
+  94% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  96% {
+    transform: translateX(1px) rotate(0.7deg);
+  }
+  98% {
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes actionFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -3px;
+  }
+}
+
+.answer-slider {
+  position: relative;
+  width: min(100%, 620px);
+  height: 78px;
+  margin: 0 auto;
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: auto;
+  background: rgba(40, 40, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px) saturate(120%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.4);
+  touch-action: none;
+  user-select: none;
+  animation: sliderBreath 2.8s ease-in-out infinite;
+}
+
+.answer-slider.is-dragging {
+  animation: none;
+}
+
+.answer-slider.is-answered {
+  background: linear-gradient(135deg, rgba(53, 190, 91, 0.28), rgba(255, 255, 255, 0.1));
+  border-color: rgba(120, 255, 150, 0.35);
+}
+
+.slider-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.12) 48%, transparent 100%);
+  transform: translateX(-100%);
+  animation: glassSweep 3.2s ease-in-out infinite;
+}
+
+.phone-knob {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  color: #32d74b;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 1), rgba(245, 245, 245, 0.94));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  cursor: grab;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.08s linear;
+  animation: phoneShake 1.6s ease-in-out infinite;
+}
+
+.answer-slider.is-dragging .phone-knob {
+  animation: none;
+  cursor: grabbing;
+}
+
+.slider-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(16px, 4vw, 21px);
+  font-weight: 500;
+  letter-spacing: -0.35px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.slide-hint {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 24px;
+  pointer-events: none;
+  animation: hintMove 1.4s ease-in-out infinite;
+}
+
+@keyframes phoneShake {
+  0%,
+  76%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  80% {
+    transform: translateX(-3px) rotate(-3deg);
+  }
+  84% {
+    transform: translateX(4px) rotate(3deg);
+  }
+  88% {
+    transform: translateX(-3px) rotate(-2deg);
+  }
+  92% {
+    transform: translateX(2px) rotate(1deg);
+  }
+}
+
+@keyframes sliderBreath {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.3),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.28),
+      0 12px 40px rgba(0, 0, 0, 0.32);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.36),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.28),
+      0 15px 46px rgba(0, 0, 0, 0.42);
+  }
+}
+
+@keyframes glassSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  45%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes hintMove {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(7px, -50%);
+    opacity: 0.8;
+  }
+}
+
+/* =========================================
+   POPUP FORM
+========================================= */
+
+.form-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 540px);
+  max-height: 94dvh;
+  transform: translate(-50%, -50%);
+  padding: 12px;
+  overflow: hidden;
+  border-radius: 28px;
+  /* Dark liquid-glass: a black-tinted translucent pane (not a milky
+     white wash) so the blurred photo behind -- its window-pane shadow +
+     leaf silhouette -- reads through as dark washes of light and color.
+     The border is deliberately NOT uniform: a brighter line only along
+     the top and right edges (like light catching the rim of a glass
+     surface from that angle), fading to almost nothing on the bottom
+     and left -- a flat all-around border reads as a plain box instead. */
+  background: linear-gradient(135deg, rgba(22, 19, 16, 0.58), rgba(8, 7, 6, 0.4));
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.38);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(22px) saturate(130%);
+  box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.18);
+  animation: popup-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20;
+}
+
+/* Strong warm sunlight spilling in from the top-left corner of the card
+   itself, sitting above the branch shadow but below the actual content. */
+.form-popup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 6% 4%,
+    rgba(255, 231, 175, 0.75) 0%,
+    rgba(255, 205, 140, 0.4) 16%,
+    rgba(255, 235, 200, 0.12) 34%,
+    transparent 58%
+  );
+  mix-blend-mode: screen;
+}
+
+@keyframes popup-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.popup-header {
+  position: relative;
+  z-index: 5;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  overflow: hidden;
+  /* Warm golden glowing text (not plain white) -- matches the reference,
+     which reads like the title itself is a small light source sitting
+     in the same warm-light corner as the window glow. */
+  color: #ffd98a;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  text-shadow:
+    0 0 8px rgba(255, 200, 110, 0.9),
+    0 0 18px rgba(255, 180, 80, 0.7),
+    0 0 34px rgba(255, 160, 60, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  /* Raised (convex) neumorphic pill -- a real drop shadow underneath so
+     it pops up off the card surface, plus the existing inner top
+     highlight, instead of sitting flush/flat with the rest of the
+     card. */
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Blended into the header's own glass instead of sitting on top of it as
+   a solid disc -- same low opacity + blur as the header bar itself, and
+   a white icon (matching the header text) rather than a dark one. */
+.popup-back-button {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.popup-back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.popup-back-button:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+.header-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 45%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  animation: header-shine-sweep 5s ease-in-out infinite;
+}
+
+@keyframes header-shine-sweep {
+  0%,
+  65% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* Ambient light glow behind the popup, visible through its glass blur. */
+.background-light {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(65px);
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+
+.light-one {
+  width: 320px;
+  height: 320px;
+  left: -100px;
+  top: -80px;
+  background: rgba(255, 207, 145, 0.34);
+  animation: light-move-one 12s ease-in-out infinite alternate;
+}
+
+.light-two {
+  width: 270px;
+  height: 270px;
+  right: -110px;
+  bottom: 10%;
+  background: rgba(255, 236, 198, 0.18);
+  animation: light-move-two 15s ease-in-out infinite alternate;
+}
+
+@keyframes light-move-one {
+  0% {
+    transform: translate(-20px, -10px);
+  }
+  50% {
+    transform: translate(100px, 70px);
+  }
+  100% {
+    transform: translate(25px, 130px);
+  }
+}
+
+@keyframes light-move-two {
+  0% {
+    transform: translate(20px, 20px);
+  }
+  100% {
+    transform: translate(-80px, -100px);
+  }
+}
+
+/* Water drops + sparkles sit on top of the glass card itself. The outer
+   .water-drop only positions the drop (base placement); Framer Motion
+   drives its drift/scale so the motion can be organic (eased, staggered
+   per-drop) instead of a fixed CSS keyframe loop. The actual jelly-drop
+   shape lives on .drop-shape, whose border-radius is also animated by
+   Framer Motion (soft blob wobble, like grass-jelly/thạch) -- the 50%
+   here is only the pre-hydration/SSR fallback shape. */
+.water-drop {
+  position: absolute;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* A round, convex glass lens (like real water droplets clinging to
+   glass) -- not a pointed teardrop. Bright rim + highlight top-left,
+   a soft dark crescent bottom-right for thickness, transparent core so
+   whatever is behind it still reads through, slightly magnified. */
+.drop-shape {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.14) 12%,
+    rgba(255, 255, 255, 0.02) 30%,
+    rgba(255, 255, 255, 0) 58%,
+    rgba(40, 30, 20, 0.05) 82%,
+    rgba(40, 30, 20, 0.14) 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset -7px -8px 12px rgba(30, 22, 14, 0.18),
+    inset 5px 6px 10px rgba(255, 255, 255, 0.6),
+    0 3px 10px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(0.5px) brightness(1.1);
+}
+
+.drop-shape::after {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  filter: blur(0.5px);
+}
+
+.drop-highlight {
+  position: absolute;
+  width: 30%;
+  height: 16%;
+  left: 22%;
+  top: 18%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  filter: blur(1px);
+  transform: rotate(-30deg);
+}
+
+/* Exactly two decorative glass bubbles -- purely ornamental, "breaking
+   up" the card's rectangularity, not five drops + three free-floating
+   sparkles. The large one sits over the Giới tính row (partly cut off
+   by the card edge); the small one sits in the bottom-right corner and
+   has its own sparkle glyph centered inside it (see .bubble-sparkle-icon
+   below), not scattered elsewhere on the card. */
+.bubble-large {
+  width: 70px;
+  height: 70px;
+  right: 6%;
+  top: 39%;
+}
+
+.bubble-small {
+  width: 42px;
+  height: 42px;
+  right: 4%;
+  bottom: 5%;
+}
+
+.bubble-sparkle-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  animation: sparkle-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotate(15deg);
+  }
+}
+
+/* A single natural branch shadow crossing the card's top-right corner --
+   one moderate leaf cluster near the top, the rest of the branch bare
+   (deliberately lighter/sparser than an earlier version that read as a
+   dense, too-dark leaf mass). Framer Motion drives the sway (outer
+   .branch-shadow-sway) and a faster, smaller flutter on just the leaf
+   cluster (.branch-shadow-leaves), so it reads as wind moving the whole
+   branch plus the leaves fluttering independently, not one rigid rotation. */
+.branch-shadow-svg {
+  position: absolute;
+  left: -6px;
+  top: -4px;
+  width: 190px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.62;
+  filter: blur(0.4px);
+  /* multiply only darkens visibly against a light backdrop -- now that
+     the card itself is dark-tinted glass, multiplying near-black onto
+     near-black would nearly disappear. Plain alpha compositing (no
+     blend mode) reads as a shadow silhouette regardless of how dark or
+     light the card happens to be. */
+  /* The path data is authored anchored to the box's right edge (same
+     artwork as before); mirroring it horizontally here -- rather than
+     re-deriving every coordinate -- moves the branch to the top-LEFT
+     corner, same side as the warm window-light source, matching the
+     lockscreen's "light + leaf shadow through a window" formula. */
+  transform: scaleX(-1);
+}
+
+.branch-shadow-svg .branch-line {
+  fill: none;
+  stroke: rgba(20, 14, 8, 0.85);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.branch-shadow-svg .branch-twig {
+  fill: none;
+  stroke: rgba(20, 14, 8, 0.7);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.branch-shadow-svg .leaf {
+  fill: rgba(20, 14, 8, 0.75);
+}
+
+.profile-form {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 21px;
+  /* Kept faint on purpose -- this wraps every field, so at any real
+     opacity it reads as one big milky wash over the whole card instead
+     of transparent glass. The individual .input-glass boxes below carry
+     the visible "field" contrast instead. */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  margin-bottom: 8px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 3px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.input-glass,
+.textarea-glass {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  /* Dark inset glass -- the field is pressed INTO the dark card (a
+     concave "pool" of glass), the opposite of the raised header/bubbles/
+     submit button. */
+  background: rgba(0, 0, 0, 0.24);
+  padding: 0 12px;
+  transition: 0.25s ease;
+  /* Sunken-glass look: a soft dark shadow pooling along the top inner
+     edge (like the field is pressed slightly into the card) plus a
+     thin bright inset along the bottom edge catching light, instead of
+     the flat single-tone box it was before. */
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.textarea-glass {
+  align-items: flex-start;
+  padding: 10px 12px;
+}
+
+.field-icon {
+  display: flex;
+  color: rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+}
+
+.input-glass input,
+.textarea-glass textarea {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  outline: none;
+}
+
+.input-glass input {
+  height: 36px;
+}
+
+.input-glass input::placeholder,
+.textarea-glass textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.textarea-glass textarea {
+  min-height: 48px;
+  resize: vertical;
+  padding-right: 22px;
+}
+
+.textarea-icon {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.input-glass:focus-within,
+.textarea-glass:focus-within {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.32);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 3px rgba(255, 255, 255, 0.18);
+}
+
+.gender-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Two zones: a solid color badge around just the icon (~1/4 of the
+   button width, left) + a pill body that fades from a pastel tint near
+   the badge down to a paler, near-white finish toward the right edge
+   (a soft gradient, not a hard color cutoff) -- matches the reference
+   closely: text sits on that pale/near-white zone, so it reads as dark
+   ink on light glass rather than white-on-dark like the rest of the
+   card. */
+.gender {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(28, 24, 22, 0.82);
+  font-weight: 500;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.gender-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 27%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gender-label {
+  flex: 1;
+  text-align: center;
+}
+
+/* Thin line-art icon (lucide Venus/Mars, not a filled glyph), colors
+   pixel-measured from the reference at the exact stroke location --
+   a darker, desaturated shade of the badge's own hue, not a glowing
+   white icon. */
+.gender.female .gender-icon {
+  color: #a0485f;
+}
+
+.gender.male .gender-icon {
+  color: #3f7496;
+}
+
+/* Each gender option's badge + pill fade carry their theme color at all
+   times (not only when selected) -- Nữ is always rose, Nam always
+   blue. Colors pixel-measured from the reference: the badge fill is a
+   light coral/steel tone, and the pill body past the badge is a flat
+   near-white tint (not a long gradual fade) -- only a short transition
+   right at the badge edge, then flat the rest of the way. .active only
+   nudges the border -- the reference itself shows no strong lồi/lõm
+   difference between selected and unselected, so the change here stays
+   subtle rather than swapping the whole look. */
+.gender.female {
+  background: linear-gradient(90deg, #fda4b9 0%, #fde6e0 22%, #fde6e0 100%);
+}
+
+.gender.female .gender-icon-badge {
+  background: #fda4b9;
+}
+
+.gender.male {
+  /* Nam's own pill body is mostly hidden under the glass bubble in the
+     reference, so this pale-blue tone is derived by symmetry with Nữ's
+     measured badge->pill relationship rather than measured directly. */
+  background: linear-gradient(90deg, #87b2d2 0%, #e6eff7 22%, #e6eff7 100%);
+}
+
+.gender.male .gender-icon-badge {
+  background: #87b2d2;
+}
+
+.gender.female.active {
+  border-color: rgba(253, 164, 185, 0.7);
+}
+
+.gender.male.active {
+  border-color: rgba(135, 178, 210, 0.7);
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.submit-button,
+.cancel-button {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* Primary action: light/raised pill, bold black text -- the brightest,
+   most prominent element at the bottom of the card. */
+.submit-button {
+  color: rgba(30, 26, 20, 0.55);
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(230, 225, 218, 0.35);
+}
+
+.submit-button:disabled {
+  cursor: not-allowed;
+}
+
+.submit-button.ready {
+  color: #1a1712;
+  background: linear-gradient(135deg, #fbf8f2, #e4ded2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  animation: button-ready 1.8s ease-in-out infinite;
+}
+
+@keyframes button-ready {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.018);
+  }
+}
+
+/* Secondary action: dark, thin border, plain-weight white text -- stays
+   visually quiet next to the light primary button. */
+.cancel-button {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.cancel-button.active {
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+/* =========================================
+   APPROVAL SCENE: STAMP
+========================================= */
+
+.approval-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.approved-paper {
+  position: absolute;
+  width: 290px;
+  height: 390px;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  padding: 40px 26px;
+  background: linear-gradient(135deg, #fffdf6, #eee8dd);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
+  z-index: 5;
+  transform-origin: center center;
+  animation: paper-enter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes paper-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -42%) rotate(-12deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+  }
+}
+
+.paper-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paper-lines div {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(95, 95, 95, 0.35);
+}
+
+.paper-lines div:nth-child(1) {
+  width: 65%;
+}
+.paper-lines div:nth-child(2) {
+  width: 85%;
+}
+.paper-lines div:nth-child(3) {
+  width: 92%;
+}
+.paper-lines div:nth-child(4) {
+  width: 80%;
+}
+.paper-lines div:nth-child(5) {
+  width: 87%;
+}
+.paper-lines div:nth-child(6) {
+  width: 72%;
+}
+.paper-lines div:nth-child(7) {
+  width: 90%;
+}
+
+.approved-stamp {
+  position: absolute;
+  left: 50%;
+  bottom: 43px;
+  transform: translateX(-50%) rotate(-5deg);
+  white-space: nowrap;
+  padding: 10px 16px;
+  border: 3px solid #a82025;
+  border-radius: 6px;
+  color: #a82025;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  animation: approved-appear 0.35s ease 1.35s forwards;
+}
+
+@keyframes approved-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-5deg) scale(1.3);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) rotate(-5deg) scale(1);
+  }
+}
+
+.stamp-animation {
+  position: absolute;
+  left: 50%;
+  top: 37%;
+  width: 190px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.hand {
+  position: absolute;
+  width: 130px;
+  height: 180px;
+  right: -4px;
+  top: 55px;
+  transform: rotate(-17deg);
+  transform-origin: bottom right;
+  animation: hand-stamp 1.7s cubic-bezier(0.2, 0.7, 0.25, 1) forwards;
+}
+
+.hand-palm {
+  position: absolute;
+  width: 110px;
+  height: 130px;
+  right: 0;
+  top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 86px;
+  filter: drop-shadow(0 14px 10px rgba(0, 0, 0, 0.35));
+}
+
+.hand-arm {
+  position: absolute;
+  right: -40px;
+  top: 105px;
+  width: 100px;
+  height: 95px;
+  border-radius: 45px 10px 20px 20px;
+  background: #202020;
+  transform: rotate(15deg);
+}
+
+.stamp-object {
+  position: absolute;
+  left: 24px;
+  top: 58px;
+  width: 95px;
+  height: 125px;
+  transform: rotate(-5deg);
+  transform-origin: center bottom;
+  animation: stamp-press 1.7s cubic-bezier(0.2, 0.7, 0.25, 1) forwards;
+}
+
+.stamp-handle {
+  position: absolute;
+  left: 23px;
+  top: 0;
+  width: 48px;
+  height: 58px;
+  border-radius: 50% 50% 30% 30%;
+  background: linear-gradient(180deg, #121212, #292929);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.35);
+}
+
+.stamp-base {
+  position: absolute;
+  left: 5px;
+  bottom: 0;
+  width: 85px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #171717;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.34);
+  color: white;
+  font-size: 7px;
+  text-align: center;
+}
+
+.stamp-base span {
+  opacity: 0;
+}
+
+@keyframes hand-stamp {
+  0% {
+    transform: rotate(-17deg) translate(80px, -95px);
+  }
+  40% {
+    transform: rotate(-17deg) translate(35px, -25px);
+  }
+  55% {
+    transform: rotate(-17deg) translate(0, 5px);
+  }
+  64% {
+    transform: rotate(-17deg) translate(0, -5px);
+  }
+  74% {
+    transform: rotate(-17deg) translate(0, 4px);
+  }
+  100% {
+    transform: rotate(-17deg) translate(130px, 50px);
+  }
+}
+
+@keyframes stamp-press {
+  0% {
+    transform: rotate(-5deg) translateY(-80px);
+  }
+  43% {
+    transform: rotate(-5deg) translateY(-20px);
+  }
+  56% {
+    transform: rotate(-5deg) translateY(16px) scaleY(0.95);
+  }
+  64% {
+    transform: rotate(-5deg) translateY(7px) scaleY(1);
+  }
+  74% {
+    transform: rotate(-5deg) translateY(15px);
+  }
+  100% {
+    transform: rotate(-5deg) translateY(100px);
+  }
+}
+
+.stage-stamp::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 67%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 70, 70, 0.65);
+  box-shadow: 0 0 35px rgba(255, 45, 45, 0.28);
+  animation: stamp-impact 0.7s ease-out 0.7s forwards;
+}
+
+@keyframes stamp-impact {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   NAM: PAPER PLANE
+========================================= */
+
+.paper-transforming {
+  animation: paper-to-plane 1.6s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+@keyframes paper-to-plane {
+  0% {
+    transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(-50%, -50%) rotate(2deg) scale(0.96);
+  }
+  65% {
+    transform: translate(-50%, -50%) rotate(-1deg) scaleX(0.62) scaleY(0.78);
+    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.paper-plane {
+  position: absolute;
+  left: 23%;
+  top: 62%;
+  width: 220px;
+  height: 145px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-style: preserve-3d;
+  z-index: 15;
+  opacity: 0;
+}
+
+/* The real 3D plane (Three.js) takes over from the flat 2D fold for
+   "flight" and "landed" -- fading in over the tail end of the fold so
+   the handoff reads as one continuous motion instead of a hard swap. */
+.plane-3d-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  /* .approval-scene sets pointer-events: none on itself so decorative
+     children don't block clicks; interactive ones opt back in. */
+  pointer-events: auto;
+}
+
+.plane-3d-canvas canvas {
+  touch-action: none;
+}
+
+@keyframes plane-3d-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.plane-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.32));
+}
+
+.plane-folding {
+  opacity: 1;
+  animation: plane-fold-in 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes plane-fold-in {
+  0% {
+    opacity: 0;
+    left: 47%;
+    top: 63%;
+    transform: translate(-50%, -50%) rotate(-7deg) scale(0.25);
+  }
+  45% {
+    opacity: 1;
+    left: 45%;
+    top: 60%;
+    transform: translate(-50%, -50%) rotate(-1deg) scale(0.65);
+  }
+  100% {
+    opacity: 1;
+    left: 38%;
+    top: 58%;
+    transform: translate(-50%, -50%) rotate(-7deg) scale(1);
+  }
+}
+
+.plane-flight {
+  opacity: 1;
+  animation: plane-fly 2.6s cubic-bezier(0.18, 0.72, 0.14, 1) forwards;
+}
+
+@keyframes plane-fly {
+  0% {
+    left: 38%;
+    top: 58%;
+    transform: translate(-50%, -50%) rotate(-7deg) scale(1);
+  }
+  15% {
+    left: 49%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-3deg) scale(1.03);
+  }
+  36% {
+    left: 67%;
+    top: 35%;
+    transform: translate(-50%, -50%) rotate(7deg) scale(1.02);
+  }
+  58% {
+    left: 88%;
+    top: 39%;
+    transform: translate(-50%, -50%) rotate(13deg) scale(0.98);
+  }
+  74% {
+    left: 76%;
+    top: 53%;
+    transform: translate(-50%, -50%) rotate(7deg) scale(0.98);
+  }
+  88% {
+    left: 56%;
+    top: 57%;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.99);
+  }
+  100% {
+    left: 50%;
+    top: 61%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+}
+
+.plane-landed {
+  opacity: 1;
+  left: 50%;
+  top: 61%;
+  animation: landing-bounce 0.85s cubic-bezier(0.2, 0.8, 0.25, 1) 1;
+}
+
+@keyframes landing-bounce {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  40% {
+    transform: translate(-50%, -38%) rotate(0deg) scale(1.025);
+  }
+  58% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.94);
+  }
+  73% {
+    transform: translate(-50%, -47%) rotate(-1deg) scale(1.015);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+}
+
+.stage-landed .paper-plane {
+  animation: plane-rest 3.8s ease-in-out infinite;
+}
+
+@keyframes plane-rest {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) translateY(0);
+  }
+  30% {
+    transform: translate(-50%, -50%) rotate(2deg) translateY(-3px);
+  }
+  65% {
+    transform: translate(-50%, -50%) rotate(-2deg) translateY(2px);
+  }
+}
+
+.plane-clicked {
+  animation: plane-click 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes plane-click {
+  0% {
+    transform: translate(-50%, -50%) rotate(0) scale(1);
+  }
+  35% {
+    transform: translate(-50%, -50%) rotate(-7deg) scale(1.08);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0) scale(1);
+  }
+}
+
+.plane-3d-tap-target {
+  position: absolute;
+  left: 50%;
+  top: 61%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 160px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 16;
+}
+
+.landing-shadow {
+  position: absolute;
+  left: 50%;
+  top: calc(61% + 62px);
+  width: 145px;
+  height: 25px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.42);
+  filter: blur(8px);
+  animation: shadow-land 0.85s ease both;
+}
+
+@keyframes shadow-land {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+  45% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0.42;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.touch-hint {
+  position: absolute;
+  left: 50%;
+  top: calc(61% + 120px);
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  opacity: 0;
+  animation: hint-appear 0.8s ease 1.2s forwards;
+}
+
+@keyframes hint-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 0.72;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* =========================================
+   NỮ: ENVELOPE FLYING RIGHT
+========================================= */
+
+.female-scene-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background-image: url("/images/bouquet-scene.webp");
+  background-size: cover;
+  background-position: center 40%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage-female-flight .female-scene-reveal {
+  animation: reveal-bouquet-scene 2.2s ease forwards;
+}
+
+.stage-female-landed .female-scene-reveal {
+  opacity: 1;
+}
+
+@keyframes reveal-bouquet-scene {
+  0%,
+  45% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.approval-banner {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  color: #c23b3b;
+  font-family: Inter, sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 12px rgba(0, 0, 0, 0.65),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: approval-banner-inout 1.2s ease forwards;
+}
+
+@keyframes approval-banner-inout {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(1.3);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.female-envelope {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 230px;
+  height: 230px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.35));
+}
+
+.envelope-photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.female-letter-stamped {
+  animation: female-letter-appear 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes female-letter-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -35%) rotate(-8deg) scale(0.82);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -51%) rotate(3deg) scale(1.03);
+  }
+  70% {
+    transform: translate(-50%, -50%) rotate(-2deg) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(1);
+  }
+}
+
+.female-letter-flying {
+  opacity: 1;
+  animation: female-letter-flight 2.2s cubic-bezier(0.22, 0.65, 0.18, 1) forwards;
+}
+
+@keyframes female-letter-flight {
+  0% {
+    left: 50%;
+    top: 58%;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(1);
+  }
+  14% {
+    left: 56%;
+    top: 52%;
+    transform: translate(-50%, -50%) rotate(8deg) scale(1.02);
+  }
+  30% {
+    left: 62%;
+    top: 45%;
+    transform: translate(-50%, -50%) rotate(-7deg) scale(1.01);
+  }
+  47% {
+    left: 70%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(9deg) scale(0.98);
+  }
+  63% {
+    left: 77%;
+    top: 41%;
+    transform: translate(-50%, -50%) rotate(-6deg) scale(0.96);
+  }
+  79% {
+    left: 70%;
+    top: 55%;
+    transform: translate(-50%, -50%) rotate(8deg) scale(0.92);
+  }
+  100% {
+    left: 44%;
+    top: 66%;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
+  }
+}
+
+.female-letter-landed {
+  opacity: 1;
+  left: 44%;
+  top: 66%;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: envelope-rest 3.6s ease-in-out infinite;
+}
+
+@keyframes envelope-rest {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-2deg) scale(0.82) translateY(-4px);
+  }
+}
+
+.envelope-clicked {
+  animation: envelope-click 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes envelope-click {
+  0% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
+  }
+  35% {
+    transform: translate(-50%, -50%) rotate(2deg) scale(0.92);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.82);
+  }
+}
+
+.female-touch-hint {
+  top: calc(66% + 115px);
+  z-index: 21;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(92, 22, 32, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+/* =========================================
+   RESPONSIVE + ACCESSIBILITY
+========================================= */
+
+/* Short screens (e.g. iPhone SE) can't fit the popup's full-width field
+   layout at the normal sizing -- compact everything further so nothing
+   gets clipped by .form-popup's overflow: hidden. */
+@media (max-height: 720px) {
+  .form-popup {
+    max-height: 97dvh;
+    padding: 8px;
+  }
+  .popup-header {
+    height: 38px;
+    font-size: 14px;
+  }
+  .profile-form {
+    margin-top: 6px;
+    padding: 8px 10px;
+  }
+  .field {
+    margin-bottom: 5px;
+  }
+  .field label {
+    margin-bottom: 1px;
+    font-size: 11px;
+  }
+  .input-glass input {
+    height: 30px;
+  }
+  .textarea-glass textarea {
+    min-height: 32px;
+  }
+  .gender {
+    height: 30px;
+  }
+  .form-actions {
+    margin-top: 5px;
+  }
+  .submit-button,
+  .cancel-button {
+    height: 34px;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-popup {
+    width: 94vw;
+    border-radius: 23px;
+  }
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .field label {
+    font-size: 12px;
+  }
+  .input-glass input {
+    font-size: 13px;
+  }
+  .textarea-glass textarea {
+    font-size: 13px;
+  }
+  .gender {
+    font-size: 13px;
+  }
+  .submit-button,
+  .cancel-button {
+    font-size: 12px;
+  }
+  .approved-paper {
+    width: 220px;
+    height: 300px;
+    padding: 32px 20px;
+  }
+  .paper-lines {
+    gap: 11px;
+  }
+  .paper-lines div {
+    height: 6px;
+  }
+  .approved-stamp {
+    bottom: 28px;
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+  .paper-plane {
+    width: 180px;
+    height: 120px;
+  }
+  .stamp-animation {
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+  .female-envelope {
+    width: 190px;
+    height: 190px;
+  }
+  .icon-circle {
+    width: 52px;
+    height: 52px;
+  }
+  .action-label {
+    font-size: 13px;
+  }
+  .answer-slider {
+    height: 70px;
+  }
+  .phone-knob {
+    width: 62px;
+    height: 62px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
