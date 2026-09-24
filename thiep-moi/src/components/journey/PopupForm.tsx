@@ -300,14 +300,20 @@ export default function PopupForm({
                 className={form.gender === "Nữ" ? "gender active female" : "gender female"}
                 onClick={() => updateField("gender", "Nữ")}
               >
-                ♀ Nữ
+                <span className="gender-icon-badge">
+                  <span className="gender-icon">♀</span>
+                </span>
+                <span className="gender-label">Nữ</span>
               </button>
               <button
                 type="button"
                 className={form.gender === "Nam" ? "gender active male" : "gender male"}
                 onClick={() => updateField("gender", "Nam")}
               >
-                ♂ Nam
+                <span className="gender-icon-badge">
+                  <span className="gender-icon">♂</span>
+                </span>
+                <span className="gender-label">Nam</span>
               </button>
             </div>
           </div>

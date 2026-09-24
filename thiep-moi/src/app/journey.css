@@ -883,51 +883,82 @@ button {
   gap: 10px;
 }
 
+/* Two zones, not one flat tinted pill: a solid color badge around just
+   the icon (left) + a pale, near-white frosted zone around the label
+   (rest of the pill) -- matches the reference, where the saturated
+   color is concentrated behind the glyph and the text sits on a much
+   lighter glass surface. */
 .gender {
   height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px;
   border-radius: 13px;
-  border: 1px solid rgba(20, 15, 10, 0.16);
-  background: rgba(255, 255, 255, 0.35);
-  color: rgba(25, 20, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 700;
   cursor: pointer;
   transition: 0.25s ease;
 }
 
-/* Each gender option carries its theme tint at all times (not only when
-   selected) -- matches the reference, where Nữ is always pink-tinted and
-   Nam always blue-tinted. The .active state deepens the same tint and
-   adds a focus ring instead of switching color from scratch. Text uses a
-   fixed dark hex (not an alpha color) plus a light text-shadow, so it
-   stays legible even where the warm corner light washes the tint out. */
-.gender.female {
-  background: rgba(246, 129, 181, 0.45);
-  border: 1.5px solid rgba(246, 129, 181, 0.75);
-  color: #5c1030;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
-  box-shadow: 0 2px 8px rgba(246, 129, 181, 0.25);
+.gender-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: 0.25s ease;
 }
 
-.gender.male {
-  background: rgba(76, 169, 235, 0.45);
-  border: 1.5px solid rgba(76, 169, 235, 0.75);
-  color: #0a3a60;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
-  box-shadow: 0 2px 8px rgba(76, 169, 235, 0.25);
+.gender-label {
+  flex: 1;
+  text-align: center;
+}
+
+/* The ♀/♂ glyph itself glows -- a soft white halo radiating outward,
+   like a small light source -- on top of the badge's own solid color. */
+.gender-icon {
+  color: white;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.95),
+    0 0 14px rgba(255, 255, 255, 0.7),
+    0 0 22px rgba(255, 255, 255, 0.4);
+}
+
+/* Each gender option's badge carries its theme color at all times (not
+   only when selected) -- Nữ is always pink, Nam always blue. .active
+   deepens the badge color + glow and brightens the pill's frosted base
+   a touch, instead of switching color from scratch. */
+.gender.female .gender-icon-badge {
+  background: radial-gradient(circle at 35% 30%, #ff9dc0, #e8558f 70%);
+  box-shadow: 0 0 14px rgba(246, 129, 181, 0.85);
+}
+
+.gender.male .gender-icon-badge {
+  background: radial-gradient(circle at 35% 30%, #7cc3f5, #2f8fd6 70%);
+  box-shadow: 0 0 14px rgba(76, 169, 235, 0.85);
 }
 
 .gender.female.active {
-  background: rgba(246, 129, 181, 0.65);
-  border-color: rgba(246, 129, 181, 0.95);
-  box-shadow: 0 0 0 3px rgba(246, 129, 181, 0.3);
-  color: #4a0c26;
+  background: rgba(246, 129, 181, 0.22);
+  border-color: rgba(246, 129, 181, 0.55);
+}
+
+.gender.female.active .gender-icon-badge {
+  box-shadow: 0 0 20px rgba(246, 129, 181, 1);
 }
 
 .gender.male.active {
-  background: rgba(76, 169, 235, 0.62);
-  border-color: rgba(76, 169, 235, 0.95);
-  box-shadow: 0 0 0 3px rgba(76, 169, 235, 0.3);
-  color: #082c48;
+  background: rgba(76, 169, 235, 0.22);
+  border-color: rgba(76, 169, 235, 0.55);
+}
+
+.gender.male.active .gender-icon-badge {
+  box-shadow: 0 0 20px rgba(76, 169, 235, 1);
 }
 
 .form-actions {
