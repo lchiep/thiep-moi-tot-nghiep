@@ -888,22 +888,24 @@ button {
   gap: 10px;
 }
 
-/* Two zones, not one flat tinted pill: a solid color badge around just
-   the icon (left) + a pale, near-white frosted zone around the label
-   (rest of the pill) -- matches the reference, where the saturated
-   color is concentrated behind the glyph and the text sits on a much
-   lighter glass surface. */
+/* Two zones: a solid color badge around just the icon (~1/4 of the
+   button width, left) + a pill body that fades from a pastel tint near
+   the badge down to a paler, near-white finish toward the right edge
+   (a soft gradient, not a hard color cutoff) -- matches the reference
+   closely: text sits on that pale/near-white zone, so it reads as dark
+   ink on light glass rather than white-on-dark like the rest of the
+   card. */
 .gender {
   height: 38px;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 3px;
-  border-radius: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(28, 24, 22, 0.82);
+  font-weight: 500;
+  font-size: 13.5px;
   cursor: pointer;
   transition: 0.25s ease;
 }
@@ -912,11 +914,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
+  width: 27%;
+  aspect-ratio: 1;
+  border-radius: 50%;
   flex-shrink: 0;
-  transition: 0.25s ease;
 }
 
 .gender-label {
@@ -924,46 +925,54 @@ button {
   text-align: center;
 }
 
-/* The ♀/♂ glyph itself glows -- a soft white halo radiating outward,
-   like a small light source -- on top of the badge's own solid color. */
-.gender-icon {
-  color: white;
-  text-shadow:
-    0 0 6px rgba(255, 255, 255, 0.95),
-    0 0 14px rgba(255, 255, 255, 0.7),
-    0 0 22px rgba(255, 255, 255, 0.4);
+/* Thin line-art icon (lucide Venus/Mars, not a filled glyph) in a
+   darker shade of the badge's own hue -- reads as ink on the badge,
+   not a glowing white icon. */
+.gender.female .gender-icon {
+  color: #7a1638;
 }
 
-/* Each gender option's badge carries its theme color at all times (not
-   only when selected) -- Nữ is always pink, Nam always blue. .active
-   deepens the badge color + glow and brightens the pill's frosted base
-   a touch, instead of switching color from scratch. */
+.gender.male .gender-icon {
+  color: #0d3a5c;
+}
+
+/* Each gender option's badge + pill fade carry their theme color at all
+   times (not only when selected) -- Nữ is always rose, Nam always
+   blue. .active only nudges the border -- the reference itself shows
+   no strong lồi/lõm difference between selected and unselected, so the
+   change here stays subtle rather than swapping the whole look. */
+.gender.female {
+  background: linear-gradient(
+    90deg,
+    rgba(246, 129, 181, 0.55) 0%,
+    rgba(255, 233, 240, 0.82) 45%,
+    rgba(255, 245, 248, 0.7) 100%
+  );
+}
+
 .gender.female .gender-icon-badge {
-  background: radial-gradient(circle at 35% 30%, #ff9dc0, #e8558f 70%);
-  box-shadow: 0 0 14px rgba(246, 129, 181, 0.85);
+  background: #ef6da3;
+}
+
+.gender.male {
+  background: linear-gradient(
+    90deg,
+    rgba(76, 169, 235, 0.55) 0%,
+    rgba(226, 242, 255, 0.82) 45%,
+    rgba(240, 248, 255, 0.7) 100%
+  );
 }
 
 .gender.male .gender-icon-badge {
-  background: radial-gradient(circle at 35% 30%, #7cc3f5, #2f8fd6 70%);
-  box-shadow: 0 0 14px rgba(76, 169, 235, 0.85);
+  background: #57a5e8;
 }
 
 .gender.female.active {
-  background: rgba(246, 129, 181, 0.22);
   border-color: rgba(246, 129, 181, 0.55);
 }
 
-.gender.female.active .gender-icon-badge {
-  box-shadow: 0 0 20px rgba(246, 129, 181, 1);
-}
-
 .gender.male.active {
-  background: rgba(76, 169, 235, 0.22);
   border-color: rgba(76, 169, 235, 0.55);
-}
-
-.gender.male.active .gender-icon-badge {
-  box-shadow: 0 0 20px rgba(76, 169, 235, 1);
 }
 
 .form-actions {

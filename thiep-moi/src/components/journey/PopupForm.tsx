@@ -13,6 +13,8 @@ import {
   Pencil,
   X,
   Send,
+  Venus,
+  Mars,
 } from "lucide-react";
 import type { Gender } from "@/lib/guestStorage";
 import { DatePickerField } from "@/components/ui/date-picker";
@@ -301,7 +303,7 @@ export default function PopupForm({
                 onClick={() => updateField("gender", "Nữ")}
               >
                 <span className="gender-icon-badge">
-                  <span className="gender-icon">♀</span>
+                  <Venus className="gender-icon" size={16} strokeWidth={2.25} />
                 </span>
                 <span className="gender-label">Nữ</span>
               </button>
@@ -311,7 +313,7 @@ export default function PopupForm({
                 onClick={() => updateField("gender", "Nam")}
               >
                 <span className="gender-icon-badge">
-                  <span className="gender-icon">♂</span>
+                  <Mars className="gender-icon" size={16} strokeWidth={2.25} />
                 </span>
                 <span className="gender-label">Nam</span>
               </button>
